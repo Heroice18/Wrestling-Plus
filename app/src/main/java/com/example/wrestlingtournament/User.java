@@ -3,11 +3,12 @@ package com.example.wrestlingtournament;
 public class User {
 
     private String _email;
-    private String _name;
+    private String _firstName;
+    private String _lastName;
     private String _password;
     private int _id;
 
-    public static void User() {
+    User() {
 
     }
 
@@ -24,13 +25,19 @@ public class User {
         _email = email;
     }
 
-    public String get_name() {
-        return _name;
+    public String get_firstName() {
+        return _firstName;
     }
 
-    public void set_name(String name) {
-        _name = name;
+    void set_firstName(String name) {
+        _firstName = name;
     }
 
+    public String get_lastName() {
+        return _lastName;
+    }
 
+    void set_lastName(String name) {
+        _lastName = name;
+    }
 }
