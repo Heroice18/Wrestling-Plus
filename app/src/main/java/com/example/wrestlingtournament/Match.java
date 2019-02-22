@@ -7,6 +7,7 @@ public class Match {
     private int _wrestlerTopPoints = 0;
     private int _wrestlerBottomPoints = 0;
     private Wrestler _matchWinner = null;
+    private Wrestler _matchLoser = null;
 
     Match(Wrestler wrestler1, Wrestler wrestler2) {
         _wrestlerTop = wrestler1;
@@ -32,13 +33,20 @@ public class Match {
     }
 
     public Wrestler get_matchWinner() { return _matchWinner; }
+    public Wrestler get_matchLoser() { return _matchLoser; }
     public void set_matchWinner(Winner matchWinner) {
-        if(matchWinner == Winner.TOP)
+        if(matchWinner == Winner.TOP) {
             this._matchWinner = this._wrestlerTop;
-        else if(matchWinner == Winner.BOTTOM)
+            this._matchLoser = this._wrestlerBottom;
+        }
+        else if(matchWinner == Winner.BOTTOM) {
             this._matchWinner = this._wrestlerBottom;
-        else
+            this._matchLoser = this._wrestlerTop;
+        }
+        else {
             this._matchWinner = null;
+            this._matchLoser = null;
+        }
     }
 
 }

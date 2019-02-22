@@ -7,10 +7,12 @@ public class Bracket {
     private List<Wrestler> _wrestlerList;
     private List<Match> _matchList;
     private DivisionNames _division;
+    private int _weightClass;
 
-    Bracket(List<Wrestler> wrestlerList, DivisionNames division) {
+    Bracket(List<Wrestler> wrestlerList, DivisionNames division, int weightClass) {
         this._wrestlerList = wrestlerList;
         this._division = division;
+        this._weightClass = weightClass;
         //Algorithm runs here that sets wrestlerList into matches and populates the matchList
     }
 
