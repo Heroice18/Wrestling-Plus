@@ -1,6 +1,6 @@
 package com.example.wrestlingtournament;
 
-public class User {
+public class UserObject {
 
     private String _email;
     private String _firstName;
@@ -8,12 +8,12 @@ public class User {
     private String _password;
     private int _id;
 
-    User() {
+    UserObject() {
 
     }
 
-    public User login() {
-        User databaseReturnedUserType = new User();
+    public UserObject login() {
+        UserObject databaseReturnedUserType = new UserObject();
         return databaseReturnedUserType;
     }
 
