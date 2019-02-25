@@ -26,4 +26,8 @@ public class TeamObject {
         player.set_division(_division);
         _roster.add(player);
     }
+
+    public void removePlayer(WrestlerObject player) {
+        _roster.remove(player);
+    }
 }
