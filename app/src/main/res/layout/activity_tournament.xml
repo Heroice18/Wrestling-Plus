@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="208dp"
         android:onClick="viewMatch"
-        android:text="View Match"
+        android:text="@string/view_match"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

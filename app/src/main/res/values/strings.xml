@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WrestlingTournament</string>
+    <string name="view_match">View Match</string>
 </resources>
