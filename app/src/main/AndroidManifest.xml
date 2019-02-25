@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".MatchActivity"></activity>
-        <activity android:name=".Tournament" />
+        <activity android:name=".TournamentActivity" />
         <activity android:name=".Login_Start">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
