@@ -1,20 +1,18 @@
 package com.example.wrestlingtournament;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CoachObject extends UserObject {
 
     private String _schoolName;
-    private List<TeamObject> _teams = new ArrayList<>();
+    private List<TeamObject> _teams;
 
     CoachObject(String firstName, String lastName, String schoolName, String email) {
         _schoolName = schoolName;
         super.set_firstName(firstName);
         super.set_lastName(lastName);
         super.set_email(email);
-        List<WrestlerObject> defaultWrestlers = new ArrayList<>();
-        TeamObject defaultTeam = new TeamObject(this, DivisionNames.MYTEAM, defaultWrestlers);
+        TeamObject defaultTeam = new TeamObject(this, DivisionNames.MYTEAM, null);
         _teams.add(defaultTeam);
     }
 
