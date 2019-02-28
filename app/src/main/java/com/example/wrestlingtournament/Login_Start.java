@@ -46,7 +46,7 @@ public class Login_Start extends AppCompatActivity{
     {
         Intent send = new Intent(this, MainActivity.class);
 
-        String check = "Player";
+        String check = "Wrestler";
         send.putExtra("USER", check);
         startActivity(send);
     }

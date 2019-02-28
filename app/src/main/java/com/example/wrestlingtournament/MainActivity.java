@@ -10,21 +10,23 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import static android.view.View.GONE;
 import static com.example.wrestlingtournament.Login_Start.location;
 
 //Hey Lets DO THIS THING
 //Howdy^ /-|-\
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
+   // private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        drawerLayout = findViewById(R.id.drawer_layout);
+        setContentView(R.layout.main_screen);
+        /*drawerLayout = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
+*/
 
 
         setUp();
@@ -86,19 +88,79 @@ public class MainActivity extends AppCompatActivity {
 
         // Intent soda = new Intent();
         //String check = soda.getStringExtra(location);
-        TextView display = findViewById(R.id.textView4);
+        TextView display = findViewById(R.id.textView5);
+
+        switch (check){
+            case "Admin":
+                displayAdmin();
+                break;
+            case "Coach":
+                displayCoach();
+                break;
+            case "Wrestler":
+                displayWrestler();
+                break;
+
+
+        }
+
         System.out.println("      HEY " + check);
         display.setText(check);
     }
 
+    public void displayAdmin()
+    {
+        System.out.println("Working fine and dandy");
+
+        Button see = (Button) findViewById(R.id.ViewAll);
+        see.setVisibility(GONE);
+        Button team = (Button) findViewById(R.id.TeamM);
+        team.setVisibility(GONE);
+        TextView title = findViewById(R.id.textView2);
+        title.setVisibility(GONE);
+
+
+    }
+
+    public void displayCoach()
+    {
+        Button man = (Button) findViewById(R.id.ManageT);
+        man.setVisibility(GONE);
+        Button god = (Button) findViewById(R.id.CreateT);
+        god.setVisibility(GONE);
+
+
+
+    }
+
+    public void displayWrestler()
+    {
+        Button man = (Button) findViewById(R.id.ManageT);
+        man.setVisibility(GONE);
+        Button god = (Button) findViewById(R.id.CreateT);
+        god.setVisibility(GONE);
+        Button team = (Button) findViewById(R.id.TeamM);
+        team.setVisibility(GONE);
+        TextView title = findViewById(R.id.textView2);
+        title.setVisibility(GONE);
+
+    }
+
+    public void startTournament(View t)
+    {
+        Intent send = new Intent(this, TournamentActivity.class);
+        startActivity(send);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+       /* switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);*/
+       return true;
 
     }
 }
