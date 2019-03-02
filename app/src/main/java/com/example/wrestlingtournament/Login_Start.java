@@ -1,8 +1,11 @@
 package com.example.wrestlingtournament;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,8 +15,21 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -23,27 +39,115 @@ import static android.view.View.VISIBLE;
 public class Login_Start extends AppCompatActivity{
 
     public static final String location = "com.example.wrestlingtournament.USER";
+    public static final String TAG = "Login_Start";
+    EditText first, last, emailEditText, passwordEditText;
+    RadioButton adminButton, coachButton, playerButton;
+    RadioGroup userType;
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login);
-        EditText first = findViewById(R.id.fName);
+        first = findViewById(R.id.fName);
         first.setVisibility(GONE);
-        EditText last = findViewById(R.id.lName);
+        last = findViewById(R.id.lName);
         last.setVisibility(GONE);
         Button man = (Button) findViewById(R.id.Finish);
         man.setVisibility(GONE);
-        CheckBox deus = findViewById(R.id.checkAdmin);
-        deus.setVisibility(GONE);
-        CheckBox side = findViewById(R.id.checkCoach);
-        side.setVisibility(GONE);
-        CheckBox jog = findViewById(R.id.checkPlayer);
-        jog.setVisibility(GONE);
+
+        userType = findViewById(R.id.userType);
+        adminButton = findViewById(R.id.admin);
+        coachButton = findViewById(R.id.coach);
+        playerButton = findViewById(R.id.player);
+
+        adminButton.setVisibility(GONE);
+        coachButton.setVisibility(GONE);
+        playerButton.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);
+
+        emailEditText = findViewById(R.id.email);
+        passwordEditText = findViewById(R.id.password);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
     //String check;
     //Intent send = new Intent(this, MainActivity.class);
+
+    public void signUpUser(View view) {
+        Log.d(TAG, "signUpUser: creating new user");
+        final String firstName = first.getText().toString();
+        final String lastName = last.getText().toString();
+        final String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        RadioGroup userType = findViewById(R.id.userType);
+        if (userType.getCheckedRadioButtonId() != -1) {
+            String type = ((RadioButton) findViewById(userType.getCheckedRadioButtonId())).getText().toString();
+            Log.d(TAG, "signUpUser: type is: " + type);
+        }
+        else {
+            Log.d(TAG, "signUpUser: error");
+            return;
+        }
+
+        if (firstName == "") {
+            first.setError("Please Enter First Name");
+            return;
+        }
+        if (lastName == "") {
+            last.setError("Please Enter Last Name");
+            return;
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Please enter valid email");
+            return;
+        }
+        if (password.length() < 6) {
+            passwordEditText.setError("Password must be at least 6 characters");
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "User created", Toast.LENGTH_SHORT).show();
+
+                    //create a user in the database with name and email
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("firstName", firstName);
+                    user.put("lastName", lastName);
+                    user.put("email", email);
+
+                    db.collection("user").document(String.valueOf(email))
+                            .set(user)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "onSuccess: added user");
+                                    //go to next activity
+                                    //startActivity(new Intent(Login_Start.this, MainActivity.class));
+                                }
+                            });
+                }
+                else {
+                    Log.d(TAG, "onComplete: account not created");
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText(getApplicationContext(), "Username already registered", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+    }
 
     public void logButton(View b)
     {
@@ -82,16 +186,16 @@ public class Login_Start extends AppCompatActivity{
         first.setVisibility(VISIBLE);
         EditText last = findViewById(R.id.lName);
         last.setVisibility(VISIBLE);
-        EditText email = findViewById(R.id.Email);
+        EditText email = findViewById(R.id.email);
         email.setVisibility(VISIBLE);
         Button man = (Button) findViewById(R.id.Finish);
         man.setVisibility(VISIBLE);
-        CheckBox deus = findViewById(R.id.checkAdmin);
-        deus.setVisibility(VISIBLE);
-        CheckBox side = findViewById(R.id.checkCoach);
-        side.setVisibility(VISIBLE);
-        CheckBox jog = findViewById(R.id.checkPlayer);
-        jog.setVisibility(VISIBLE);
+        RadioButton adminButton = findViewById(R.id.admin);
+        adminButton.setVisibility(VISIBLE);
+        RadioButton coachButton = findViewById(R.id.coach);
+        coachButton.setVisibility(VISIBLE);
+        RadioButton playerButton = findViewById(R.id.player);
+        playerButton.setVisibility(VISIBLE);
         Button log = (Button) findViewById(R.id.login);
         log.setVisibility(GONE);
         Button in = (Button) findViewById(R.id.login);
@@ -118,12 +222,12 @@ public class Login_Start extends AppCompatActivity{
         last.setVisibility(GONE);
         Button man = (Button) findViewById(R.id.Finish);
         man.setVisibility(GONE);
-        CheckBox deus = findViewById(R.id.checkAdmin);
-        deus.setVisibility(GONE);
-        CheckBox side = findViewById(R.id.checkCoach);
-        side.setVisibility(GONE);
-        CheckBox jog = findViewById(R.id.checkPlayer);
-        jog.setVisibility(GONE);
+        RadioButton adminButton = findViewById(R.id.admin);
+        adminButton.setVisibility(GONE);
+        RadioButton coachButton = findViewById(R.id.coach);
+        coachButton.setVisibility(GONE);
+        RadioButton playerButton = findViewById(R.id.player);
+        playerButton.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);
 
@@ -164,13 +268,6 @@ public class Login_Start extends AppCompatActivity{
                 return true;
             }
         });*/
-
-
-
-
-
-
-
 
 
 }
