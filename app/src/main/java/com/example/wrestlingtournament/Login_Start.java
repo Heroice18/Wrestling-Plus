@@ -21,11 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -45,12 +49,14 @@ public class Login_Start extends AppCompatActivity{
     RadioGroup userType;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    UserObject currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
+
         first = findViewById(R.id.fName);
         first.setVisibility(GONE);
         last = findViewById(R.id.lName);
@@ -61,7 +67,7 @@ public class Login_Start extends AppCompatActivity{
         userType = findViewById(R.id.userType);
         adminButton = findViewById(R.id.admin);
         coachButton = findViewById(R.id.coach);
-        playerButton = findViewById(R.id.player);
+        playerButton = findViewById(R.id.wrestler);
 
         adminButton.setVisibility(GONE);
         coachButton.setVisibility(GONE);
@@ -74,27 +80,38 @@ public class Login_Start extends AppCompatActivity{
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateActivity(currentUser);
     }
     //String check;
     //Intent send = new Intent(this, MainActivity.class);
 
-    public void signUpUser(View view) {
+    //Creates a new account using email and password to firebase
+    //Also submits the firstname, lastname, email, and usertype to create a user document in firestore
+    public void signUpUser(final View view) {
         Log.d(TAG, "signUpUser: creating new user");
         final String firstName = first.getText().toString();
         final String lastName = last.getText().toString();
         final String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-
+        final String type;
         RadioGroup userType = findViewById(R.id.userType);
         if (userType.getCheckedRadioButtonId() != -1) {
-            String type = ((RadioButton) findViewById(userType.getCheckedRadioButtonId())).getText().toString();
+            type = ((RadioButton) findViewById(userType.getCheckedRadioButtonId())).getText().toString();
             Log.d(TAG, "signUpUser: type is: " + type);
         }
         else {
             Log.d(TAG, "signUpUser: error");
             return;
         }
-
         if (firstName == "") {
             first.setError("Please Enter First Name");
             return;
@@ -123,6 +140,7 @@ public class Login_Start extends AppCompatActivity{
                     user.put("firstName", firstName);
                     user.put("lastName", lastName);
                     user.put("email", email);
+                    user.put("userType", type);
 
                     db.collection("user").document(String.valueOf(email))
                             .set(user)
@@ -130,8 +148,8 @@ public class Login_Start extends AppCompatActivity{
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: added user");
-                                    //go to next activity
-                                    //startActivity(new Intent(Login_Start.this, MainActivity.class));
+                                    //go to sign in page
+                                    returnBack(view);
                                 }
                             });
                 }
@@ -149,10 +167,69 @@ public class Login_Start extends AppCompatActivity{
 
     }
 
-    public void logButton(View b)
+    public void logInUser(View b)
     {
-        Toast q = Toast.makeText(this, " Not Active", Toast.LENGTH_LONG);
-        q.show();
+        final String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (email == "") {
+            emailEditText.setError("Please enter email");
+            return;
+        }
+        if (password == ""){
+            passwordEditText.setError("Please enter password");
+            return;
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Please enter valid email");
+            return;
+        }
+        if (password.length() < 6) {
+            passwordEditText.setError("Password must be at least 6 characters");
+            return;
+        }
+
+        Log.d(TAG, "logInUser: Beggining attempt to log in user");
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "logInUser: Successfully logged in");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateActivity(user);
+                } else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void updateActivity(FirebaseUser user) {
+       if (user != null) {
+            //find the user in firebase and fill in the user object
+            String userEmail = user.getEmail();
+           Log.d(TAG, "updateActivity: User email: " + userEmail);
+                    db.collection("user").document(String.valueOf(userEmail))
+                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            currentUser = documentSnapshot.toObject(UserObject.class);
+                            Log.d(TAG, "onSuccess: successfully got user info");
+                            final Intent intent = new Intent(Login_Start.this, MainActivity.class);
+                            intent.putExtra("USER", currentUser.getUserType());
+
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: failed to get user info");
+                            return;
+                        }
+                    });
+        }
     }
 
     public void adminLog(View a)
@@ -194,7 +271,7 @@ public class Login_Start extends AppCompatActivity{
         adminButton.setVisibility(VISIBLE);
         RadioButton coachButton = findViewById(R.id.coach);
         coachButton.setVisibility(VISIBLE);
-        RadioButton playerButton = findViewById(R.id.player);
+        RadioButton playerButton = findViewById(R.id.wrestler);
         playerButton.setVisibility(VISIBLE);
         Button log = (Button) findViewById(R.id.login);
         log.setVisibility(GONE);
@@ -226,7 +303,7 @@ public class Login_Start extends AppCompatActivity{
         adminButton.setVisibility(GONE);
         RadioButton coachButton = findViewById(R.id.coach);
         coachButton.setVisibility(GONE);
-        RadioButton playerButton = findViewById(R.id.player);
+        RadioButton playerButton = findViewById(R.id.wrestler);
         playerButton.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);

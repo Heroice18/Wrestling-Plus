@@ -2,42 +2,47 @@ package com.example.wrestlingtournament;
 
 public class UserObject {
 
-    private String _email;
-    private String _firstName;
-    private String _lastName;
-    private String _password;
-    private int _id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String userType;
 
-    UserObject() {
-
+    public UserObject() {
+        this.email = "empty";
+        this.firstName = "empty";
+        this.lastName = "empty";
+        this.userType = "empty";
     }
 
-    public UserObject login() {
-        UserObject databaseReturnedUserType = new UserObject();
-        return databaseReturnedUserType;
+    public String getEmail() {
+        return email;
     }
 
-    public String get_email() {
-        return _email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void set_email(String email) {
-        _email = email;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String get_firstName() {
-        return _firstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    void set_firstName(String name) {
-        _firstName = name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String get_lastName() {
-        return _lastName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    void set_lastName(String name) {
-        _lastName = name;
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

@@ -7,9 +7,9 @@ public class AdminObject extends UserObject {
     private List<TournamentObject> _tournaments;
 
     AdminObject(String firstName, String lastName, String email) {
-        super.set_firstName(firstName);
-        super.set_lastName(lastName);
-        super.set_email(email);
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
+        super.setEmail(email);
     }
 
     public void makeTournament(String tournamentName, List<DivisionNames> divisions) {

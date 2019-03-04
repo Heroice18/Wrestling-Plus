@@ -9,9 +9,9 @@ public class CoachObject extends UserObject {
 
     CoachObject(String firstName, String lastName, String schoolName, String email) {
         _schoolName = schoolName;
-        super.set_firstName(firstName);
-        super.set_lastName(lastName);
-        super.set_email(email);
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
+        super.setEmail(email);
         TeamObject defaultTeam = new TeamObject(this, DivisionNames.MYTEAM, null);
         _teams.add(defaultTeam);
     }

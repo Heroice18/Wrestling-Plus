@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import static android.view.View.GONE;
 import static com.example.wrestlingtournament.Login_Start.location;
 
@@ -20,6 +23,7 @@ import static com.example.wrestlingtournament.Login_Start.location;
 //Howdy^ /-|-\
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseAuth mAuth;
    // private DrawerLayout drawerLayout;
 
     @Override
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 */
 
-
+        mAuth = FirebaseAuth.getInstance();
         setUp();
     }
 
@@ -101,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 displayWrestler();
                 break;
 
-
+            default:
+                displayWrestler();
         }
 
         System.out.println("      HEY " + check);
@@ -163,5 +168,23 @@ public class MainActivity extends AppCompatActivity {
        return true;
 
     }
+
+    //log out of account
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        FirebaseUser user = mAuth.getCurrentUser();
+        updateActivity(user);
+    }
+
+    //update the activity depending on if the user is logged in or not
+    public void updateActivity(FirebaseUser user) {
+        if (user == null) {
+            Intent intent = new Intent(this, Login_Start.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+    }
+
 }
 
