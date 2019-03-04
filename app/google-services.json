@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "935100737422",
+    "firebase_url": "https://wrestle-plus-app.firebaseio.com",
+    "project_id": "wrestle-plus-app",
+    "storage_bucket": "wrestle-plus-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935100737422:android:59eaf861a909f09f",
+        "android_client_info": {
+          "package_name": "com.example.wrestlingtournament"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "935100737422-82ko5d8d9a3u6mdaddlkf612s3i8ug52.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlu0yb9i9C3yJEORyTj0Wy5wfhE_vbMU4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
