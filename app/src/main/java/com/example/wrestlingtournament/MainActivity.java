@@ -150,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
         title.setVisibility(GONE);
 
     }
+    public void beginTeam(View s) {
+        Intent pass = new Intent(this, teamManage.class);
+        startActivity(pass);
+    }
 
     public void startTournament(View t)
     {
