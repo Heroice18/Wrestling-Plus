@@ -1,4 +1,29 @@
 <resources>
     <string name="app_name">WrestlingTournament</string>
     <string name="view_match">View Match</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="teamSelection">Team List</string-array>
+    <string-array name="tournamentLevels">
+        <item>Varsity</item>
+        <item>Junior Varsity</item>
+        <item>Sophomore</item>
+        <item>Freshman</item>
+    </string-array>
+    <string-array name="weightClass">
+        <item>&lt; 106</item>
+        <item>107–113</item>
+        <item>114–120</item>
+        <item>121–126</item>
+        <item>127–132</item>
+        <item>133–138</item>
+        <item>139–145</item>
+        <item>146–152</item>
+        <item>153–160</item>
+        <item>161–170</item>
+        <item>171–182</item>
+        <item>183–195</item>
+        <item>196–220</item>
+        <item>221–285</item>
+    </string-array>
+
 </resources>
