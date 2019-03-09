@@ -196,6 +196,9 @@ public class Login_Start extends AppCompatActivity{
                 if (task.isSuccessful()) {
                     Log.d(TAG, "logInUser: Successfully logged in");
                     FirebaseUser user = mAuth.getCurrentUser();
+                    /*Create a Shared Preference with the json/gson
+                    of the firebase object here
+                     */
                     updateActivity(user);
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
