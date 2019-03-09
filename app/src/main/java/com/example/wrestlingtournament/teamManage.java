@@ -102,7 +102,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         //list.setAdapter(adapt);
     }
 
-    //Add a wrestler to the list view
+    //Originally for the popup box now it doesn't do anything
     public void addWrestler(View w){
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View pop = inflater.inflate(R.layout.popup_window, null);
@@ -126,6 +126,10 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         updateTeam();
     }
 
+    /********************
+     * This file opens the input box for the user to type the name and add that
+     * to the list
+     */
     public void confirmAdd(View c)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -142,6 +146,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
+                //adds the input to the list
                 newTeam.add(m_Text);
             }
         });
@@ -159,7 +164,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
 
     }
-    //Remove a Wrestler from the ListView
+    /********************
+     * This Takes away from the list
+     */
     public void subtractWrestler(View w){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
