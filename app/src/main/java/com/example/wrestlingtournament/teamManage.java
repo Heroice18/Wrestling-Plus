@@ -2,6 +2,7 @@ package com.example.wrestlingtournament;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,16 +24,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class teamManage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    public static final String TAG = "teamManage";
     //This holds the players
    ArrayList<String> newTeam = new ArrayList<String>();
    //this is for the list of team names
@@ -40,8 +56,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
    private String m_Text = "";
 
-
-
+    FirebaseFirestore db;
+    FirebaseUser currentUser;
+    FirebaseAuth mAuth;
 
     //Hide the Player information on startup
     @Override
@@ -64,9 +81,10 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         teamLoad.setAdapter(data);
-
         updateTeam();
-
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
     }
 
     //Shows the player options after a team is selected
@@ -128,12 +146,13 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
     /********************
      * This file opens the input box for the user to type the name and add that
-     * to the list
+     * to the list and when the user inputs a valid email, adds that wrestler
+     * to his default team
      */
     public void confirmAdd(View c)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Write The Player's Name");
+        builder.setTitle("Submit wrestler's email:");
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -145,9 +164,36 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //email input
                 m_Text = input.getText().toString();
+
+                db.collection("user").document(m_Text)
+                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (!documentSnapshot.exists()) {
+                            Toast.makeText(teamManage.this, "Could not find wrestler", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String newFName = (String) documentSnapshot.get("firstName");
+                            String newLName = (String) documentSnapshot.get("lastName");
+                            String wrestlerName = newFName + " " + newLName;
+                            Log.d(TAG, "onSuccess: wrestler being added - " + wrestlerName);
+
+                            Map<String, Object> newWrestler = new HashMap<>();
+                            newWrestler.put(m_Text, wrestlerName);
+
+                            db.collection("user").document(currentUser.getEmail())
+                                    .collection("teams").document("default").set(newWrestler);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(teamManage.this, "Error finding wrestler", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 //adds the input to the list
-                newTeam.add(m_Text);
+                //newTeam.add(m_Text);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -158,12 +204,31 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         builder.show();
-
-
-
-
-
     }
+
+    public void getWrestlersFromTeam(View view) {
+
+        DocumentReference docRef = db.collection("user").document(currentUser.getEmail())
+                .collection("teams").document("default");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map<String, Object> teamMap = new HashMap<>();
+                        teamMap = document.getData();
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
     /********************
      * This Takes away from the list
      */

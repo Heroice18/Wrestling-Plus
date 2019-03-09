@@ -80,8 +80,6 @@ public class Login_Start extends AppCompatActivity{
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-
     }
 
     @Override
