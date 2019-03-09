@@ -53,6 +53,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
    ArrayList<String> newTeam = new ArrayList<String>();
    //this is for the list of team names
    ArrayList<String> totalTeam = new ArrayList<String>();
+   public Map<String, Object> teamMap = new HashMap<>();
+   public Map<String, Object> newWrestler = new HashMap<>();
+   public Map<String, Object> test = new HashMap<>();
 
    private String m_Text = "";
 
@@ -71,7 +74,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         remove.setVisibility(VISIBLE);
         ListView title = findViewById(R.id.team_list);
         title.setVisibility(VISIBLE);
-        totalTeam.add("1");
+        totalTeam.add("Default Team");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
@@ -179,8 +182,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                             String wrestlerName = newFName + " " + newLName;
                             Log.d(TAG, "onSuccess: wrestler being added - " + wrestlerName);
 
-                            Map<String, Object> newWrestler = new HashMap<>();
+                            //Moved to the top and made public
                             newWrestler.put(m_Text, wrestlerName);
+                            updateList();
 
                             db.collection("user").document(currentUser.getEmail())
                                     .collection("teams").document("default").set(newWrestler);
@@ -206,6 +210,24 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         builder.show();
     }
 
+    public void updateList(){
+        //newWrestler
+        //ArrayList passAlong = new ArrayList();
+        //passAlong.addAll(newWrestler.entrySet());
+        //newTeam = passAlong;
+        for(Map.Entry<String,Object> entry : test.entrySet()){
+            String key = entry.getKey();
+            newTeam.add(key);
+        }
+        updateTeam();
+    }
+
+
+
+    /*******
+     * Function that get the team info from the database and stores it in a map
+     *
+     */
     public void getWrestlersFromTeam(View view) {
 
         DocumentReference docRef = db.collection("user").document(currentUser.getEmail())
@@ -216,8 +238,11 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Map<String, Object> teamMap = new HashMap<>();
+                        //MOved the team map to be public at the top of the file
                         teamMap = document.getData();
+                        /****
+                         * Here we'll iterate through and assign the names to the list view
+                         */
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
@@ -287,7 +312,57 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     }
 
     public void addTeams(View t){
-        totalTeam.add("1");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Please Name Your New Team");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+                //Iterator<String> i = newTeam.iterator();
+                totalTeam.add(m_Text);
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+
+    }
+    public void testMaps(View q){
+        Object V = new Object() ;
+        Object b = new Object() ;
+        Object n = new Object() ;
+        Object m = new Object() ;
+        test.put("Hey", V);
+        test.put("There", b);
+        test.put("I'm", n);
+        test.put("Brandon", m);
+        ArrayList data = new ArrayList();
+        for(Map.Entry<String,Object> entry : test.entrySet()){
+          String key = entry.getKey();
+          newTeam.add(key);
+        }
+        //data.addAll(test.entrySet());
+        //newTeam = data;
+        updateTeam();
+
+
+
     }
 
     /*
