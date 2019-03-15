@@ -6,7 +6,6 @@
     <string-array name="tournamentLevels">
         <item>Varsity</item>
         <item>Junior Varsity</item>
-        <item>Sophomore</item>
         <item>Freshman</item>
     </string-array>
     <string-array name="weightClass">
