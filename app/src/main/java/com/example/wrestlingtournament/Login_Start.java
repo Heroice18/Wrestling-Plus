@@ -146,11 +146,6 @@ public class Login_Start extends AppCompatActivity{
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: added user");
-
-                                    if (type.equals("Coach")) {
-                                        //new Thread(new SetupCoachDatabase(String.valueOf(email))).start();
-                                    }
-
                                     //go to sign in page
                                     returnBack(view);
                                 }
