@@ -311,36 +311,24 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         updateTeam();
     }
 
-    /* // This code is being reserved for stretch goals where coaches can add custom teams.
     public void addTeams(View t){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please Name Your New Team");
 
         // Set up the input
-        final Spinner input = new Spinner(this);
+        final EditText input = new EditText(this);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        ArrayAdapter<String> data = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, DivisionNames.names());
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.activity_listview, newTeam);
-        input.setOnItemSelectedListener(this);
-        input.setAdapter(adapter);
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        input.setAdapter(data);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         builder.setView(input);
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Get the selected team name to be added
-                m_Text = input.toString();
+                m_Text = input.getText().toString();
                 //Iterator<String> i = newTeam.iterator();
-                // Add the team to the total list of team names.
                 totalTeam.add(m_Text);
-                // Push to database.
-                //db.collection("user").document(currentUser.getEmail())
-                       // .collection("teams").document(m_Text).set(m_Text);
+
 
             }
         });
@@ -355,8 +343,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
 
     }
-    */
-
     public void testMaps(View q){
         Object V = new Object() ;
         Object b = new Object() ;
@@ -374,6 +360,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         //data.addAll(test.entrySet());
         //newTeam = data;
         updateTeam();
+
+
+
     }
 
     /*

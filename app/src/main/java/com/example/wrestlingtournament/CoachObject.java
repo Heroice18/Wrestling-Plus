@@ -12,7 +12,7 @@ public class CoachObject extends UserObject {
         super.setFirstName(firstName);
         super.setLastName(lastName);
         super.setEmail(email);
-        TeamObject defaultTeam = new TeamObject(this, DivisionNames.VARSITY, null);
+        TeamObject defaultTeam = new TeamObject(this, DivisionNames.MYTEAM, null);
         _teams.add(defaultTeam);
     }
 
@@ -34,7 +34,7 @@ public class CoachObject extends UserObject {
      * This
      */
     public boolean removeTeam(DivisionNames division) {
-        if (division == DivisionNames.VARSITY)
+        if (division == DivisionNames.MYTEAM)
             return false;
 
         for (TeamObject team : _teams) {
