@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
         Intent send = new Intent(this, TournamentActivity.class);
         startActivity(send);
     }
+    public void manageTournament(View m){
+        Intent start = new Intent (this, manageTournaments.class);
+        startActivity(start);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
