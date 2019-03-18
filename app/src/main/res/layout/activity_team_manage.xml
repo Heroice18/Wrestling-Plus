@@ -174,7 +174,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="addTeams"
         android:text="Create Team"
         app:layout_constraintBottom_toTopOf="@+id/team_list"
         app:layout_constraintEnd_toEndOf="parent"
