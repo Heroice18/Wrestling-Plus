@@ -208,7 +208,7 @@ public class Login_Start extends AppCompatActivity{
     public void updateActivity(FirebaseUser user) {
        if (user != null) {
             //find the user in firebase and fill in the user object
-            String userEmail = user.getEmail();
+           String userEmail = user.getEmail();
            Log.d(TAG, "updateActivity: User email: " + userEmail);
                     db.collection("user").document(String.valueOf(userEmail))
                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

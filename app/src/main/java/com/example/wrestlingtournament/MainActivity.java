@@ -145,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void createTournament(View view) {
+        Intent intent = new Intent(this, CreateTournamentActivity.class);
+        startActivity(intent);
+    }
+
 }
 
 //Side bar code

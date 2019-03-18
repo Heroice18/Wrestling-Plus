@@ -11,6 +11,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".manageTournaments" />
         <activity android:name=".teamManage" />
+        <activity android:name=".CreateTournamentActivity"></activity>
+        <activity android:name=".teamManage" />
         <activity android:name=".MatchActivity" />
         <activity android:name=".TournamentActivity" />
         <activity android:name=".Login_Start">
