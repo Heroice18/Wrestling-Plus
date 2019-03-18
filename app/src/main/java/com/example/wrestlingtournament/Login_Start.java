@@ -151,7 +151,17 @@ public class Login_Start extends AppCompatActivity{
                                     Log.d(TAG, "onSuccess: added user");
 
                                     if (type.equals("Coach")) {
-                                        new Thread(new SetupCoachDatabase(String.valueOf(email))).start();
+                                        Map<String, Object> teamsExist = new HashMap<>();
+                                        teamsExist.put("exists", true);
+                                        db.collection("user").document(String.valueOf(email))
+                                                .collection("teams").document("varsity")
+                                                .set(teamsExist);
+                                        db.collection("user").document(String.valueOf(email))
+                                                .collection("teams").document("juniorvarsity")
+                                                .set(teamsExist);
+                                        db.collection("user").document(String.valueOf(email))
+                                                .collection("teams").document("freshman")
+                                                .set(teamsExist);
                                     }
 
                                     //go to sign in page
