@@ -148,7 +148,7 @@ public class Login_Start extends AppCompatActivity{
                                     Log.d(TAG, "onSuccess: added user");
 
                                     if (type.equals("Coach")) {
-                                        //new Thread(new SetupCoachDatabase(String.valueOf(email))).start();
+                                        new Thread(new SetupCoachDatabase(String.valueOf(email))).start();
                                     }
 
                                     //go to sign in page
