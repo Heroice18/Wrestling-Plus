@@ -137,7 +137,7 @@ public class Login_Start extends AppCompatActivity{
                     Map<String, Object> user = new HashMap<>();
                     user.put("firstName", firstName);
                     user.put("lastName", lastName);
-                    user.put("email", email);
+                    user.put("email", email.toLowerCase());
                     user.put("userType", type);
 
                     db.collection("user").document(String.valueOf(email))
@@ -146,6 +146,11 @@ public class Login_Start extends AppCompatActivity{
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: added user");
+
+                                    if (type.equals("Coach")) {
+                                        new Thread(new SetupCoachDatabase(String.valueOf(email))).start();
+                                    }
+
                                     //go to sign in page
                                     returnBack(view);
                                 }
