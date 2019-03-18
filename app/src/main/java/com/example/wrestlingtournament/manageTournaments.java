@@ -28,11 +28,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static android.view.View.VISIBLE;
@@ -43,7 +45,12 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     //this is for the list of team names
     ArrayList<String> totalTeam = new ArrayList<String>();
     public String m_Text;
-    private View.OnClickListener tap;
+    FirebaseFirestore db;
+    FirebaseUser currentUser;
+    FirebaseAuth mAuth;
+    public static final String TAG = "manageTournaments";
+    public String current_Tournament;
+    public Map<String, Object> tournamentMap = new HashMap<>();
 
 
 
@@ -64,10 +71,10 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         teamLoad.setAdapter(data);
-        updateTeam();
-        /*db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();*/
+        updateSelection();
+        updateonClick();
+
+
 
 
 
@@ -75,10 +82,40 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     }
 
 
+    public void updateSelection(){
+      /*  DocumentReference docRef = db.collection("tournaments").document(currentUser.getEmail())
+                .collection("teams").document("default");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //MOved the team map to be public at the top of the file
+                        tournamentMap = document.getData();
+                        /****
+                         * Here we'll iterate through and assign the names to the list view
+                         *
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        for(Map.Entry<String, Object> entry : tournamentMap.entrySet()){
+            String key = entry.getKey();
+            Log.d(TAG, "updateSelection: " + key);
+        }*/
+
+    }
+
 
     //This updates the listview as the players are added or subtracted
     //Also this is where I have the team select for now
-    public void updateTeam(){
+    public void updateonClick(){
 
        ListView list = (ListView) findViewById(R.id.PlayerList);
        ArrayAdapter<String> adept = new ArrayAdapter<String>(this,
@@ -105,34 +142,28 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                        //email input
                        m_Text = input.getText().toString();
 
-                      /* db.collection("user").document(m_Text)
-                               .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                       DocumentReference docRef = db.collection("tournaments").document(currentUser.getDisplayName())
+                               .collection("test").document(currentUser.getDisplayName());
+                       docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                            @Override
-                           public void onSuccess(DocumentSnapshot documentSnapshot) {
-                               if (!documentSnapshot.exists()) {
-                                   Toast.makeText(teamManage.this, "Could not find wrestler", Toast.LENGTH_SHORT).show();
+                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                               if (task.isSuccessful()) {
+                                   DocumentSnapshot document = task.getResult();
+                                   if (document.exists()) {
+                                       //MOved the team map to be public at the top of the file
+                                       tournamentMap = document.getData();
+                                       /****
+                                        * Here we'll iterate through and assign the names to the list view
+                                        */
+                                       Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                   } else {
+                                       Log.d(TAG, "No such document");
+                                   }
                                } else {
-                                   String newFName = (String) documentSnapshot.get("firstName");
-                                   String newLName = (String) documentSnapshot.get("lastName");
-                                   String wrestlerName = newFName + " " + newLName;
-                                   Log.d(TAG, "onSuccess: wrestler being added - " + wrestlerName);
-
-                                   //Moved to the top and made public
-                                   newWrestler.put(m_Text, wrestlerName);
-                                   updateList();
-
-                                   db.collection("user").document(currentUser.getEmail())
-                                           .collection("teams").document("default").set(newWrestler);
+                                   Log.d(TAG, "get failed with ", task.getException());
                                }
                            }
-                       }).addOnFailureListener(new OnFailureListener() {
-                           @Override
-                           public void onFailure(@NonNull Exception e) {
-                               Toast.makeText(teamManage.this, "Error finding wrestler", Toast.LENGTH_SHORT).show();
-                           }
-                       });*/
-                       //adds the input to the list
-                       //newTeam.add(m_Text);
+                       });
                    }
                });
                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -147,58 +178,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
            }
        });
 
-
-
-
-
-
-
-        //This part fills the table with the players data
-       /* ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.activity_listview, newTeam);
-
-
-        ListView listView = (ListView) findViewById(R.id.PlayerList);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context check = getApplicationContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(check);
-                builder.setTitle("Submit wrestler's weight:");
-
-// Set up the input
-                final EditText input = new EditText(check);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-                builder.setView(input);
-
-// Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //email input
-                        m_Text = input.getText().toString();
-
-
-                            }
-
-                        //adds the input to the list
-                        //newTeam.add(m_Text);
-                    });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-
-            }
-        });
-        listView.setAdapter(adapter);*/
-
     }
 
 
@@ -212,6 +191,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
+        current_Tournament = item;
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();

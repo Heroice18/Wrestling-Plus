@@ -49,10 +49,12 @@ public class Login_Start extends AppCompatActivity{
     RadioGroup userType;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    FirebaseUser fbUser;
     UserObject currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: Creating activity");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
@@ -84,10 +86,11 @@ public class Login_Start extends AppCompatActivity{
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart: Starting activity");
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateActivity(currentUser);
+        fbUser = mAuth.getCurrentUser();
+        updateActivity();
     }
     //String check;
     //Intent send = new Intent(this, MainActivity.class);
@@ -98,7 +101,7 @@ public class Login_Start extends AppCompatActivity{
         Log.d(TAG, "signUpUser: creating new user");
         final String firstName = first.getText().toString();
         final String lastName = last.getText().toString();
-        final String email = emailEditText.getText().toString();
+        final String email = emailEditText.getText().toString().toLowerCase();
         String password = passwordEditText.getText().toString();
         final String type;
         RadioGroup userType = findViewById(R.id.userType);
@@ -198,11 +201,11 @@ public class Login_Start extends AppCompatActivity{
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "logInUser: Successfully logged in");
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    fbUser = mAuth.getCurrentUser();
                     /*Create a Shared Preference with the json/gson
                     of the firebase object here
                      */
-                    updateActivity(user);
+                    updateActivity();
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -210,17 +213,22 @@ public class Login_Start extends AppCompatActivity{
         });
     }
 
-    public void updateActivity(FirebaseUser user) {
-       if (user != null) {
+    public void updateActivity() {
+        Log.d(TAG, "updateActivity: updating activity, seeing if user is already logged in");
+       if (fbUser != null) {
+           Log.d(TAG, "updateActivity: user was already logged in");
             //find the user in firebase and fill in the user object
-           String userEmail = user.getEmail();
+           String userEmail = fbUser.getEmail();
+           Log.d(TAG, "updateActivity: email :" + userEmail);
            Log.d(TAG, "updateActivity: User email: " + userEmail);
                     db.collection("user").document(String.valueOf(userEmail))
                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Log.d(TAG, "onSuccess: snapshot - " + documentSnapshot);
                             currentUser = documentSnapshot.toObject(UserObject.class);
                             Log.d(TAG, "onSuccess: successfully got user info");
+                            Log.d(TAG, "onSuccess: user usertype: " + currentUser.getUserType());
                             final Intent intent = new Intent(Login_Start.this, MainActivity.class);
                             intent.putExtra("USER", currentUser.getUserType());
 
