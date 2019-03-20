@@ -46,6 +46,10 @@ import java.util.Map;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+/**
+ * This Activity holds everything we need for the activity_team_manage.xml including creation,
+ * button onClick functions, and the spinner selector with its database connections.
+ */
 public class teamManage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "teamManage";
@@ -90,7 +94,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         currentUser = mAuth.getCurrentUser();
     }
 
-    //Shows the player options after a team is selected
+    /**
+     * Retrieves the wrestlers in the selected team from FireBase and puts them in an array adapter.
+     */
     public void showPlayers(){
         Button add = (Button) findViewById(R.id.addPlayer);
         add.setVisibility(VISIBLE);
@@ -102,8 +108,10 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
 
     }
-    //This updates the listview as the players are added or subtracted
-    //Also this is where I have the team select for now
+
+    /**
+     * Takes our player list for the selected team and adds the adapter to our list view.
+     */
     public void updateTeam(){
        //This part fills the table with the players data
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
@@ -147,7 +155,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         updateTeam();
     }
 
-    /********************
+    /**
      * This file opens the input box for the user to type the name and add that
      * to the list and when the user inputs a valid email, adds that wrestler
      * to his default team
@@ -224,7 +232,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
 
 
-    /*******
+    /**
      * Function that get the team info from the database and stores it in a map
      *
      */
@@ -240,9 +248,8 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                     if (document.exists()) {
                         //MOved the team map to be public at the top of the file
                         teamMap = document.getData();
-                        /****
-                         * Here we'll iterate through and assign the names to the list view
-                         */
+
+                         // Here we'll iterate through and assign the names to the list view
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
@@ -254,7 +261,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
     }
 
-    /********************
+    /**
      * This Takes away from the list
      */
     public void subtractWrestler(View w){
