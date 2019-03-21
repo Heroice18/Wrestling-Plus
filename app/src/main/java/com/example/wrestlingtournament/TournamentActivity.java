@@ -13,6 +13,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Displays the tournament information to the user.
+ * When created, it populates the listView and textView with the tournament info from Firebase.
+ *
+ * Admins, coaches, and wrestlers will see the name of the tournament, the list of matches for
+ * each round of the tournament, and pick which level and weight class brackets they want to view.
+ */
 public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
   public static final String TAG = "TournamentActivity";
@@ -24,7 +31,7 @@ public class TournamentActivity extends AppCompatActivity {
     setContentView(R.layout.activity_tournament);
     db = FirebaseFirestore.getInstance();
     
-    final TextView tournamentName = (TextView) findViewById(R.id.tournamentName);
+    final TextView tournamentName = findViewById(R.id.tournamentName);
     db.collection("tournaments").document("test").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
       @Override
       public void onComplete(@NonNull Task<DocumentSnapshot> task) {

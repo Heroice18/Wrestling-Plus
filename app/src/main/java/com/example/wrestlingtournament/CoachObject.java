@@ -25,11 +25,10 @@ public class CoachObject extends UserObject {
     }
 
     /**
-     * removeTeam();
      *
-     * parameter DivisionNames division
+     * @param division The division name from DivisionNames enum.
      *
-     * return boolean
+     * @return Returns true if the team was removed, otherwise returns false.
      *
      * This
      */
