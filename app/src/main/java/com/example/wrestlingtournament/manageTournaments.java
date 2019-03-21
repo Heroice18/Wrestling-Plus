@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,11 +82,22 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     }
 
-
+    //Brandon Is working on this part
     public void updateSelection(){
-      /*  DocumentReference docRef = db.collection("tournaments").document(currentUser.getEmail())
-                .collection("teams").document("default");
+/*        db.collection("tournaments").whereEqualTo("adminEmail", currentUser.getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });*/
+
+
+        /* This is test code, not important
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -104,11 +116,13 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
-        });
+        });*/
+
+
         for(Map.Entry<String, Object> entry : tournamentMap.entrySet()){
             String key = entry.getKey();
             Log.d(TAG, "updateSelection: " + key);
-        }*/
+        }
 
     }
 
@@ -179,6 +193,58 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
        });
 
     }
+
+    public void addCoach(View a){
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
+                builder.setTitle("Enter Coaches Email:");
+
+        // Set up the input
+                final EditText input = new EditText(manageTournaments.this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+                builder.setView(input);
+        // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //email input
+                        m_Text = input.getText().toString();
+
+                        DocumentReference docRef = db.collection("tournaments").document(currentUser.getDisplayName())
+                                .collection("test").document(currentUser.getDisplayName());
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //MOved the team map to be public at the top of the file
+                                        tournamentMap = document.getData();
+                                        /****
+                                         * Here we'll iterate through and assign the names to the list view
+                                         */
+                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+            }
 
 
 

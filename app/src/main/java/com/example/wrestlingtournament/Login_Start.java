@@ -37,8 +37,13 @@ import java.util.Map;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-//Hey Lets DO THIS THING
-//Howdy^ /-|-\
+
+/**
+ * First Activity that will start up once the app starts. Once started the
+ * app with prompt the User with a Login Form Field with the option to log in
+ * or create a profile. The User can log in as a Wrestler, Coach, or Admin which
+ * will display specific buttons and options to the User to interact with the app.
+ */
 
 public class Login_Start extends AppCompatActivity{
 
