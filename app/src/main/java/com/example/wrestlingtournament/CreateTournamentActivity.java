@@ -109,6 +109,14 @@ public class CreateTournamentActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        // Add tournament tCode to the Admin's account
+                                        final Map<String, Object> adminTournamentAddition = new HashMap<>();
+                                        adminTournamentAddition.put("name", tName);
+                                        adminTournamentAddition.put("code", tCode);
+                                        adminTournamentAddition.put("date", tDate);
+                                        db.collection("user").document(adminEmail).collection("tournaments")
+                                                .document(tCode).set(adminTournamentAddition);
+
                                         Log.d(TAG, "onComplete: Successfully added tournament to database");
                                         if (freshmanCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)
