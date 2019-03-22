@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
   public static final String TAG = "TournamentActivity";
+  FirebaseAuth user;
   
   
   @Override
@@ -30,9 +32,12 @@ public class TournamentActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_tournament);
     db = FirebaseFirestore.getInstance();
+    user = FirebaseAuth.getInstance();
+    
+    String email = user.getCurrentUser().getEmail();
     
     final TextView tournamentName = findViewById(R.id.tournamentName);
-    db.collection("tournaments").document("test").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    db.collection("user").document(email).collection("tournaments").document("RexFight2019").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
       @Override
       public void onComplete(@NonNull Task<DocumentSnapshot> task) {
         if (task.isSuccessful()) {

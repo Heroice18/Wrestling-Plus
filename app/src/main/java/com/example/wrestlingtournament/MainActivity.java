@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
     {
         System.out.println("Working fine and dandy");
 
-        Button see = (Button) findViewById(R.id.ViewAll);
-        see.setVisibility(GONE);
+       // Button see = (Button) findViewById(R.id.ViewAll);
+       // see.setVisibility(GONE);
         Button team = (Button) findViewById(R.id.TeamM);
         team.setVisibility(GONE);
         TextView title = findViewById(R.id.textView2);
