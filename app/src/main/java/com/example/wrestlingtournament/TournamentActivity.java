@@ -25,6 +25,7 @@ public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
   public static final String TAG = "TournamentActivity";
   FirebaseAuth user;
+  String tournamentCode;
   
   
   @Override
@@ -35,9 +36,10 @@ public class TournamentActivity extends AppCompatActivity {
     user = FirebaseAuth.getInstance();
     
     String email = user.getCurrentUser().getEmail();
+    tournamentCode = getIntent().getStringExtra("tournamentCode");
     
     final TextView tournamentName = findViewById(R.id.tournamentName);
-    db.collection("user").document(email).collection("tournaments").document("RexFight2019").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    db.collection("user").document(email).collection("tournaments").document(tournamentCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
       @Override
       public void onComplete(@NonNull Task<DocumentSnapshot> task) {
         if (task.isSuccessful()) {

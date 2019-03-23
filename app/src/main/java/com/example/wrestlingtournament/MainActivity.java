@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     public void startTournament(View t)
     {
         Intent send = new Intent(this, TournamentActivity.class);
+        send.putExtra("tournamentCode", "byuiWrestlingWI19");
         startActivity(send);
     }
     public void manageTournament(View m){
