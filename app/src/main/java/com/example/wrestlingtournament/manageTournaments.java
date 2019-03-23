@@ -66,7 +66,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         setContentView(R.layout.activity_manage_tournaments);
 
         totalTeam.add("Default Tournament");
-        //totalTournaments.add("first");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
@@ -83,11 +82,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         updateSelection();
         updateonClick();
 
-
-
-
-
-
+        db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -131,12 +126,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                             String key = entry.getKey();
                                             Log.d(TAG, "onComplete key: " + key);
 
-                                                if(key.equals("name")) {
+                                                if(key.equals("code")) {
                                                     String value = entry.getValue().toString();
                                                     Log.d(TAG, "onComplete value: " + value);
                                                     Log.d(TAG, "onComplete: Entering if name");
                                                     totalTournaments.add(value);
-
                                                 }
                                             Log.d(TAG, "onComplete passing: " + totalTournaments);
                                         }
@@ -218,13 +212,21 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     }
 
+    /**
+     * This function takes input from the activity to add a new coach to the tournament. This
+     * happens by adding the tournaments as a document in the coaches tournament collection
+     * in firestore
+     * @param a
+     */
     public void addCoach(View a){
 
+        //when the add coach button is clicked, a dialog box will come up to ask for the coache's email
                 AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
                 builder.setTitle("Enter Coaches Email:");
 
         // Set up the input
                 final EditText input = new EditText(manageTournaments.this);
+
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
                 builder.setView(input);
@@ -233,30 +235,43 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //email input
-                        m_Text = input.getText().toString();
+                        Map<String, Object> tournamentMap = new HashMap<>();
+                        final String coachEmail = input.getText().toString();
 
-                        DocumentReference docRef = db.collection("tournaments").document(currentUser.getDisplayName())
-                                .collection("test").document(currentUser.getDisplayName());
-                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        //first we need to get the information from the current tournnament so we can give it to the coach.
+                        db.collection("tournaments").document(current_Tournament)
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        //MOved the team map to be public at the top of the file
-                                        tournamentMap = document.getData();
-                                        /****
-                                         * Here we'll iterate through and assign the names to the list view
-                                         */
-                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                    } else {
-                                        Log.d(TAG, "No such document");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with ", task.getException());
-                                }
+                            public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
+                                Log.d(TAG, "onComplete: got current tournament" + task.getResult().getData());
+                                //now we will make sure the coach exists and has a usertype of coach
+                                db.collection("user").document(coachEmail).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> coachTask) {
+                                                //make sure the user exists
+                                                if (coachTask.getResult().exists()) {
+                                                    //make sure the user is a coach
+                                                    if (coachTask.getResult().get("userType").equals("Coach")) {
+                                                        //now we will put the tournament into the coaches tournament list
+                                                        db.collection("user").document(coachEmail)
+                                                                .collection("tournaments").document(current_Tournament)
+                                                                .set(task.getResult().getData());
+                                                        Toast.makeText(getApplicationContext(), "Coach added to tournament!",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "Sorry, this coach does not exist",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), "Sorry, this coach does not exist",
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
                             }
                         });
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -292,8 +307,4 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
-
-
 }

@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Create Tournament activity handles admins creating new tournaments
+ */
 public class CreateTournamentActivity extends AppCompatActivity {
 
     public static final String TAG = "CreateTournament";
@@ -48,7 +51,7 @@ public class CreateTournamentActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
     }
 
-    /****************************************************************
+    /**
      * Add a tounrmanet to firestore. The tournament code becomes the
      * name of the document, and adds the admin's email, tournament name,
      * and tournament date as fields in the document.
