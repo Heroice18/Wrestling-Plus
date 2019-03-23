@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,13 +79,28 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         remove.setVisibility(VISIBLE);
         ListView title = findViewById(R.id.team_list);
         title.setVisibility(VISIBLE);
-        totalTeam.add("Default Team");
+        totalTeam.add("Varsity");
+        totalTeam.add("JuniorVarsity");
+        totalTeam.add("Freshman");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, totalTeam);
         Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
-        teamLoad.setOnItemSelectedListener(this);
+        teamLoad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newTeam.clear();
+                getWrestlersFromTeam();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                newTeam.clear();
+                getWrestlersFromTeam();
+            }
+
+        });
         teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         teamLoad.setAdapter(data);
@@ -95,7 +111,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     }
 
     /**
-     * Retrieves the wrestlers in the selected team from FireBase and puts them in an array adapter.
+     * Show buttons on the Activity
      */
     public void showPlayers(){
         Button add = (Button) findViewById(R.id.addPlayer);
@@ -110,7 +126,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     }
 
     /**
-     * Takes our player list for the selected team and adds the adapter to our list view.
+     * Takes our teams for the coach and adds them to the spinner
      */
     public void updateTeam(){
        //This part fills the table with the players data
@@ -131,7 +147,12 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         //list.setAdapter(adapt);
     }
 
-    //Originally for the popup box now it doesn't do anything
+    /**
+     * Originally for the popup box now it doesn't do anything
+     * This
+     * @param w
+     */
+
     public void addWrestler(View w){
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View pop = inflater.inflate(R.layout.popup_window, null);
@@ -194,8 +215,11 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                             newWrestler.put(m_Text, wrestlerName);
                             updateList();
 
+                            Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
                             db.collection("user").document(currentUser.getEmail())
-                                    .collection("teams").document("default").set(newWrestler);
+                                    .collection("teams")
+                                    .document(teamLoad.getSelectedItem().toString().toLowerCase())
+                                    .set(newWrestler, SetOptions.merge());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -218,13 +242,16 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         builder.show();
     }
 
+    /**
+     * Grab players in selected team and add to listview
+     */
     public void updateList(){
         //newWrestler
         //ArrayList passAlong = new ArrayList();
         //passAlong.addAll(newWrestler.entrySet());
         //newTeam = passAlong;
-        for(Map.Entry<String,Object> entry : test.entrySet()){
-            String key = entry.getKey();
+        for(Map.Entry<String,Object> entry : teamMap.entrySet()){
+            String key = entry.getValue().toString();
             newTeam.add(key);
         }
         updateTeam();
@@ -236,10 +263,10 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      * Function that get the team info from the database and stores it in a map
      *
      */
-    public void getWrestlersFromTeam(View view) {
-
+    public void getWrestlersFromTeam() {
+        Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
         DocumentReference docRef = db.collection("user").document(currentUser.getEmail())
-                .collection("teams").document("default");
+                .collection("teams").document(teamLoad.getSelectedItem().toString().toLowerCase());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -250,6 +277,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                         teamMap = document.getData();
 
                          // Here we'll iterate through and assign the names to the list view
+                        updateList();
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");

@@ -164,7 +164,21 @@ public class Login_Start extends AppCompatActivity{
                                                 .set(exampleTournament);
                                     }
 
+                                    if (type.equals("Wrestler")) {
+                                        Map<String, Object> exampleTournament = new HashMap<>();
+                                        exampleTournament.put("name", "Example Tournament");
+                                        db.collection("user").document(String.valueOf(email))
+                                                .collection("tournaments").document("RexFight2019")
+                                                .set(exampleTournament);
+                                    }
+
                                     if (type.equals("Coach")) {
+                                        Map<String, Object> exampleTournament = new HashMap<>();
+                                        exampleTournament.put("name", "Example Tournament");
+                                        db.collection("user").document(String.valueOf(email))
+                                                .collection("tournaments").document("RexFight2019")
+                                                .set(exampleTournament);
+
                                         Map<String, Object> teamsExist = new HashMap<>();
                                         teamsExist.put("exists", true);
                                         db.collection("user").document(String.valueOf(email))
