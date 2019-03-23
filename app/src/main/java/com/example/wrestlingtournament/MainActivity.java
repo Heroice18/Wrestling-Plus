@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String itemValue = (String) tournamentList.getItemAtPosition(position);
             
-                send.putExtra("tournamentCode", "byuiWrestlingWI19");
+                send.putExtra("tournamentName", itemValue);
                 startActivity(send);
             }
         };

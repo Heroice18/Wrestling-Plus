@@ -25,36 +25,24 @@ public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
   public static final String TAG = "TournamentActivity";
   FirebaseAuth user;
-  String tournamentCode;
+  String tournamentName;
   
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_tournament);
+    db = FirebaseFirestore.getInstance();
+    user = FirebaseAuth.getInstance();
     
     setTournamentName();
-    
   }
   
   private void setTournamentName() {
-    db = FirebaseFirestore.getInstance();
-    user = FirebaseAuth.getInstance();
-  
-    String email = user.getCurrentUser().getEmail();
-    tournamentCode = getIntent().getStringExtra("tournamentCode");
-  
-    final TextView tournamentName = findViewById(R.id.tournamentName);
-    db.collection("user").document(email).collection("tournaments").document(tournamentCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-      @Override
-      public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-        if (task.isSuccessful()) {
-          DocumentSnapshot document = task.getResult();
-          Log.d(TAG, String.valueOf(document.getData()));
-          tournamentName.setText((CharSequence) document.get("name"));
-        }
-      }
-    });
+    tournamentName = getIntent().getStringExtra("tournamentName");
+    
+    final TextView tournamentNameView = findViewById(R.id.tournamentName);
+    tournamentNameView.setText(tournamentName);
   }
   
   public void viewMatch(View m) {
