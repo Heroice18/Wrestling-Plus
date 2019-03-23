@@ -32,12 +32,18 @@ public class TournamentActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_tournament);
+    
+    setTournamentName();
+    
+  }
+  
+  private void setTournamentName() {
     db = FirebaseFirestore.getInstance();
     user = FirebaseAuth.getInstance();
-    
+  
     String email = user.getCurrentUser().getEmail();
     tournamentCode = getIntent().getStringExtra("tournamentCode");
-    
+  
     final TextView tournamentName = findViewById(R.id.tournamentName);
     db.collection("user").document(email).collection("tournaments").document(tournamentCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
       @Override
