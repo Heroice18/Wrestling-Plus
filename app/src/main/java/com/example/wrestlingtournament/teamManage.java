@@ -1,6 +1,5 @@
 package com.example.wrestlingtournament;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,13 +35,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
@@ -75,8 +69,8 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         setContentView(R.layout.activity_team_manage);
         Button add = (Button) findViewById(R.id.addPlayer);
         add.setVisibility(VISIBLE);
-        Button remove = (Button) findViewById(R.id.subPlayer);
-        remove.setVisibility(VISIBLE);
+        Button addToTournament = (Button) findViewById(R.id.add_to_tournament);
+        addToTournament.setVisibility(VISIBLE);
         ListView title = findViewById(R.id.team_list);
         title.setVisibility(VISIBLE);
         totalTeam.add("Varsity");
@@ -116,7 +110,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     public void showPlayers(){
         Button add = (Button) findViewById(R.id.addPlayer);
         add.setVisibility(VISIBLE);
-        Button remove = (Button) findViewById(R.id.subPlayer);
+        Button remove = (Button) findViewById(R.id.add_to_tournament);
         remove.setVisibility(VISIBLE);
 
         ListView title = findViewById(R.id.team_list);
@@ -152,7 +146,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      * This
      * @param w
      */
-
+    @Deprecated
     public void addWrestler(View w){
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View pop = inflater.inflate(R.layout.popup_window, null);
@@ -216,6 +210,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                             updateList();
 
                             Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
+
                             db.collection("user").document(currentUser.getEmail())
                                     .collection("teams")
                                     .document(teamLoad.getSelectedItem().toString().toLowerCase())
@@ -240,6 +235,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         builder.show();
+        getWrestlersFromTeam();
     }
 
     /**
@@ -257,11 +253,91 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         updateTeam();
     }
 
+    /**
+     * Take all members of currently displayed team and add to a tournament.
+     */
+    public void addTeamToTournament(View view) {
+        final Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
+        AlertDialog.Builder builder = new AlertDialog.Builder(teamManage.this);
+        builder.setTitle("Submit this team to tournament:");
 
+        // Add coaches tournaments from database to an array to be fed to the spinner
+        final List<String> coachesTournaments = new ArrayList<>();
+
+        Thread myThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                db.collection("user").document(currentUser.getEmail()).collection("tournaments")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        coachesTournaments.add(document.getId());
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+
+        myThread.start();
+        try {
+            myThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<String> coachesTournamentsList = new ArrayList<>();
+        coachesTournamentsList = coachesTournaments;
+        // Set up the input
+        final Spinner input = new Spinner(teamManage.this);
+        // Specify the type of input expected
+        ArrayAdapter<String> data = new ArrayAdapter<>(teamManage.this,
+                android.R.layout.simple_spinner_item, coachesTournamentsList);
+        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input.setAdapter(data);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.toString();
+
+                Map<String, Object> tournamentName = new HashMap<>();
+                tournamentName.put("code", m_Text);
+                //tournamentName.put("name", db.collection("user"));
+
+                for(Map.Entry<String,Object> entry : teamMap.entrySet()){
+                    Map<String, Object> playerName = new HashMap<>();
+                    playerName.put("name", entry.getValue().toString());
+                    playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
+
+                    db.collection("tournaments").document(m_Text)
+                            .collection("addedPlayers").document(entry.getKey())
+                            .set(playerName, SetOptions.merge());
+                    db.collection("user").document(entry.getKey())
+                            .collection("tournaments").document(m_Text)
+                            .set(tournamentName);
+                }
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
     /**
      * Function that get the team info from the database and stores it in a map
-     *
      */
     public void getWrestlersFromTeam() {
         Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
@@ -307,7 +383,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_Text = input.getText().toString();
+                m_Text = input.toString();
                 //Iterator<String> i = newTeam.iterator();
                 int num = 0;
                 int loc = 0;
