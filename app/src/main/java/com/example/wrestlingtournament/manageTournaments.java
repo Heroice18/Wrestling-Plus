@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -53,6 +54,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public String current_Tournament;
     public Map<String, Object> tournamentMap = new HashMap<>();
 
+    ArrayList<String> totalTournaments = new ArrayList<String>();
+    public Map<String, Object> TournamentStore = new HashMap<>();
+
 
 
 
@@ -62,6 +66,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         setContentView(R.layout.activity_manage_tournaments);
 
         totalTeam.add("Default Tournament");
+        //totalTournaments.add("first");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
@@ -71,6 +76,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         teamLoad.setOnItemSelectedListener(this);
         teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         teamLoad.setAdapter(data);
         updateSelection();
         updateonClick();
@@ -82,48 +90,64 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     }
 
-    //Brandon Is working on this part
+    /**
+     * This function will update the Activity which includes the Spinner and list of players
+     */
+    public void updateActivity(){
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+                R.layout.activity_listview, newTeam);
+        ArrayAdapter<String> data = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, totalTournaments);
+        Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
+        teamLoad.setOnItemSelectedListener(this);
+        teamLoad.setAdapter(adapter);
+        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        teamLoad.setAdapter(data);
+
+    }
+
+    /**
+     * This function grabs all of the tournaments under the Admin's control and displays them in the spinner
+     */
     public void updateSelection(){
-/*        db.collection("tournaments").whereEqualTo("adminEmail", currentUser.getEmail())
+
+        db.collection("user").document(currentUser.getEmail()).collection("tournaments")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.i(TAG, "onComplete: " + "Getting the Tournamnet List");
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, "onComplete of document: " + document);
+                                String name = "name";
+                                TournamentStore = document.getData();
 
+                                    Log.d(TAG, "onComplete storage: " + TournamentStore);
+
+                                        for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
+                                            String key = entry.getKey();
+                                            Log.d(TAG, "onComplete key: " + key);
+
+                                                if(key.equals("name")) {
+                                                    String value = entry.getValue().toString();
+                                                    Log.d(TAG, "onComplete value: " + value);
+                                                    Log.d(TAG, "onComplete: Entering if name");
+                                                    totalTournaments.add(value);
+
+                                                }
+                                            Log.d(TAG, "onComplete passing: " + totalTournaments);
+                                        }
+                                updateActivity();
+                            }
                         }
-                    }
-                });*/
-
-
-        /* This is test code, not important
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //MOved the team map to be public at the top of the file
-                        tournamentMap = document.getData();
-                        /****
-                         * Here we'll iterate through and assign the names to the list view
-                         *
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });*/
-
-
-        for(Map.Entry<String, Object> entry : tournamentMap.entrySet()){
-            String key = entry.getKey();
-            Log.d(TAG, "updateSelection: " + key);
-        }
-
+                            else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                });
     }
 
 
