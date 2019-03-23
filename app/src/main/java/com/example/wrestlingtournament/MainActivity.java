@@ -1,6 +1,7 @@
 package com.example.wrestlingtournament;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -8,13 +9,27 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static com.example.wrestlingtournament.Login_Start.location;
@@ -24,17 +39,83 @@ import static com.example.wrestlingtournament.Login_Start.location;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
+    FirebaseFirestore db;
+    FirebaseUser currentUser;
+    ListView tournamentList;
+    Intent send;
+    ArrayList<String> totalTournaments = new ArrayList<String>();
+    public Map<String, Object> TournamentStore = new HashMap<>();
+    ArrayAdapter<String> myAdapter;
+    public static final String TAG = "MainActivity";
    // private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
-
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        
+        setTournamentList();
+        
         mAuth = FirebaseAuth.getInstance();
         setUp();
     }
-
+    
+    /**
+     * Fills the ListView with all of the tournaments under the current admin's control
+     */
+    public void setTournamentList() {
+        send = new Intent(this, TournamentActivity.class);
+        tournamentList = findViewById(R.id.tournamentList);
+    
+        db.collection("user").document(currentUser.getEmail()).collection("tournaments")
+            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    Log.d(TAG, "Task was successful. Now to populating the array and map");
+                
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, "Current document: " + document);
+                    
+                        TournamentStore = document.getData();
+                    
+                        Log.d(TAG, "Storage: " + TournamentStore);
+                    
+                        for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
+                            String key = entry.getKey();
+                            Log.d(TAG, "Current key: " + key);
+                        
+                            if(key.equals("name")) {
+                                String value = entry.getValue().toString();
+                                Log.d(TAG, "Value: " + value);
+                                Log.d(TAG, "Entering if name");
+                                totalTournaments.add(value);
+                                Log.d(TAG, "Check totalTournaments: " + totalTournaments);
+                            }
+                        }
+                    }
+                    tournamentList.setAdapter(myAdapter);
+                }
+            }
+        });
+    
+        myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, totalTournaments);
+        
+        AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String itemValue = (String) tournamentList.getItemAtPosition(position);
+            
+                send.putExtra("tournamentCode", "byuiWrestlingWI19");
+                startActivity(send);
+            }
+        };
+    
+        tournamentList.setOnItemClickListener(listClick);
+    }
 
     public void setUp() {
         Bundle box = getIntent().getExtras();
@@ -68,14 +149,12 @@ public class MainActivity extends AppCompatActivity {
     {
         System.out.println("Working fine and dandy");
 
-       // Button see = (Button) findViewById(R.id.ViewAll);
-       // see.setVisibility(GONE);
+        Button see = (Button) findViewById(R.id.ViewAll);
+        see.setVisibility(GONE);
         Button team = (Button) findViewById(R.id.TeamM);
         team.setVisibility(GONE);
         TextView title = findViewById(R.id.textView2);
         title.setVisibility(GONE);
-
-
     }
 
     public void displayCoach()
@@ -84,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
         man.setVisibility(GONE);
         Button god = (Button) findViewById(R.id.CreateT);
         god.setVisibility(GONE);
-
-
+        ListView list = findViewById(R.id.tournamentList);
+        list.setVisibility(GONE);
 
     }
 
@@ -99,8 +178,10 @@ public class MainActivity extends AppCompatActivity {
         team.setVisibility(GONE);
         TextView title = findViewById(R.id.textView2);
         title.setVisibility(GONE);
-
+        ListView list = findViewById(R.id.tournamentList);
+        list.setVisibility(GONE);
     }
+    
     public void beginTeam(View s) {
         Intent pass = new Intent(this, teamManage.class);
         startActivity(pass);
