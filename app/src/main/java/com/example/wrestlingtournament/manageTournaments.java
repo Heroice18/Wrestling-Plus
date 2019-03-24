@@ -70,8 +70,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public Map<String, Object> TournamentStore = new HashMap<>();
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,16 +140,12 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                 populate.add(value);
 
                             }
-
-
-
                             Log.d(TAG, "onComplete passing: " + totalTournaments);
                         }
                         newTeam = populate;
                         updateActivity();
                     }
-                }
-                else {
+                } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
@@ -159,11 +153,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
 
     }
-
-
-
-
-
 
     /**
      * This function will update the Activity which includes the Spinner and list of players
@@ -227,7 +216,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                         }
                 });
     }
-
 
     //This updates the listview as the players are added or subtracted
     //Also this is where I have the team select for now
@@ -420,16 +408,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                 });
 
                 builder.show();
-
             }
 
             public void refresh(View r){
                 grabPlayers();
             }
-
-
-
-
 
     /*
     The following functions are for the team select dropdown bar
@@ -449,8 +432,4 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
-
-
 }
