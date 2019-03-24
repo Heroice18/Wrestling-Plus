@@ -127,7 +127,7 @@ public class CreateTournamentActivity extends AppCompatActivity {
                                         }
                                         if (jvCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)
-                                                    .collection("divisions").document("jv").set(jMap);
+                                                    .collection("divisions").document("juniorvarsity").set(jMap);
                                         }
                                         if (varsityCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)

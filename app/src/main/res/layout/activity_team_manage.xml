@@ -27,19 +27,19 @@
         android:layout_marginEnd="32dp"
         android:onClick="confirmAdd"
         android:text="Add Player"
-        app:layout_constraintEnd_toStartOf="@+id/subPlayer"
+        app:layout_constraintEnd_toStartOf="@+id/add_to_tournament"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
-        android:id="@+id/subPlayer"
+        android:id="@+id/add_to_tournament"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:onClick="subtractWrestler"
-        android:text="Remove Player"
+        android:onClick="addTeamToTournament"
+        android:text="Submit team to Tournament"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 

@@ -67,16 +67,11 @@
         android:id="@+id/tournamentDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="##/##/####"
-        android:inputType="date"
-        android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        android:inputType="textShortMessage"
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="444dp"
         tools:text="@tools:sample/date/mmddyy" />
 
     <TextView
@@ -166,4 +161,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
 </android.support.constraint.ConstraintLayout>

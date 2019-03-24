@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +47,7 @@ import static android.view.View.VISIBLE;
 public class manageTournaments extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     ArrayList<String> newTeam = new ArrayList<String>();
+    ArrayList<String> populate = new ArrayList<String>();
     //this is for the list of team names
     ArrayList<String> totalTeam = new ArrayList<String>();
     public String m_Text;
@@ -53,7 +57,15 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public static final String TAG = "manageTournaments";
     public String current_Tournament;
     public Map<String, Object> tournamentMap = new HashMap<>();
+    public Map<String, Object> transferMap = new HashMap<>();
 
+    public String type = "freshman";
+    public Object player;
+    public String playerData;
+
+    RadioButton fresh, junior, varsity;
+    RadioGroup playerType;
+    public String division;
     ArrayList<String> totalTournaments = new ArrayList<String>();
     public Map<String, Object> TournamentStore = new HashMap<>();
 
@@ -65,12 +77,16 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tournaments);
 
-        totalTeam.add("Default Tournament");
+        //totalTeam.add("Default Tournament");
+        //totalTournaments.add("first");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, totalTeam);
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
+        fresh = findViewById(R.id.freshman1);
+        junior = findViewById(R.id.JV);
+        varsity = findViewById(R.id.Varsity);
         newTeam.add("Default Player");
         teamLoad.setOnItemSelectedListener(this);
         teamLoad.setAdapter(adapter);
@@ -81,9 +97,73 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         teamLoad.setAdapter(data);
         updateSelection();
         updateonClick();
+        grabPlayers();
 
-        db = FirebaseFirestore.getInstance();
+
+
+
+
+
     }
+
+    public void grabPlayers(){
+        //Log.d(TAG, "grabPlayers: Current" + currentUser.getDisplayName());
+        playerType = findViewById(R.id.radioGroup);
+        if (playerType.getCheckedRadioButtonId() != -1) {
+            type = ((RadioButton) findViewById(playerType.getCheckedRadioButtonId())).getText().toString().toLowerCase();
+            Log.d(TAG, "group: type is: " + type);
+        }
+
+        Log.d(TAG, "grabPlayers: tournamnet" + current_Tournament);
+        Log.d(TAG, "grabPlayers: type" + type);
+        //Log.d(TAG, "grabPlayers: tournamnet" + current_Tournament);
+        //DocumentReference docRef = db.collection("tournaments").document("SF");
+        db.collection("tournaments").document("testing").collection("divisions").
+                document(type).collection("addedPlayersDebug").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.i(TAG, "onComplete: " + "Getting the Player List");
+                        Log.d(TAG, document.getId() + " ==> " + document.getData());
+                        Log.d(TAG, "onComplete of document: " + document);
+                        String name = "name";
+                        TournamentStore = document.getData();
+
+                        Log.d(TAG, "onComplete storage: " + TournamentStore);
+
+                        for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
+                            String key = entry.getKey();
+                            Log.d(TAG, "onComplete key: " + key);
+                            if(key.equals("Player")) {
+                                String value = entry.getValue().toString();
+                                Log.d(TAG, "onComplete value: " + value);
+                                Log.d(TAG, "onComplete: Entering if name");
+                                populate.add(value);
+
+                            }
+
+
+
+                            Log.d(TAG, "onComplete passing: " + totalTournaments);
+                        }
+                        newTeam = populate;
+                        updateActivity();
+                    }
+                }
+                else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+
+    }
+
+
+
+
+
 
     /**
      * This function will update the Activity which includes the Spinner and list of players
@@ -100,6 +180,8 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         teamLoad.setAdapter(data);
+        ListView listView = (ListView) findViewById(R.id.PlayerList);
+        listView.setAdapter(adapter);
 
     }
 
@@ -131,6 +213,8 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                     Log.d(TAG, "onComplete value: " + value);
                                                     Log.d(TAG, "onComplete: Entering if name");
                                                     totalTournaments.add(value);
+                                                    current_Tournament = value;
+
                                                 }
                                             Log.d(TAG, "onComplete passing: " + totalTournaments);
                                         }
@@ -149,7 +233,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     //Also this is where I have the team select for now
     public void updateonClick(){
 
-       ListView list = (ListView) findViewById(R.id.PlayerList);
+        final ListView list = (ListView) findViewById(R.id.PlayerList);
        ArrayAdapter<String> adept = new ArrayAdapter<String>(this,
                R.layout.activity_listview, newTeam);
        list.setAdapter(adept);
@@ -157,6 +241,13 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
            @Override
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                Context check = getApplicationContext();
+               //String chech = manageTournaments.this;
+               player = (list.getItemAtPosition(position));
+               playerData = player.toString();
+               Log.d(TAG, "onItemClick To String: " + playerData);
+
+
+               Log.d(TAG, "onItemClick player: " + player);
 
                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
                builder.setTitle("Submit wrestler's weight:");
@@ -173,10 +264,17 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                    public void onClick(DialogInterface dialog, int which) {
                        //email input
                        m_Text = input.getText().toString();
+                       int weight = Integer.parseInt(m_Text);
+                       //String player = manageTournaments.this;
+                       Log.d(TAG, "onClick: weight " + weight);
 
-                       DocumentReference docRef = db.collection("tournaments").document(currentUser.getDisplayName())
-                               .collection("test").document(currentUser.getDisplayName());
-                       docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                       //This part will have to go into the default tournament setting in the tournaments section
+                       db.collection("tournaments").document(/*current_Tournament*/"testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").update("weight", weight);
+                       db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", true);
+                       db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                            @Override
                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                if (task.isSuccessful()) {
@@ -188,6 +286,23 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                         * Here we'll iterate through and assign the names to the list view
                                         */
                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                       transferMap = document.getData();
+                                       Log.d(TAG, "onComplete Transfer Map: " + transferMap);
+                                       db.collection("tournaments").document("testing").collection("divisions").
+                                               document(type).collection("confirmedPlayersDebug").add(transferMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                           @Override
+                                           public void onSuccess(DocumentReference documentReference) {
+                                               Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                           }
+                                       })
+                                               .addOnFailureListener(new OnFailureListener() {
+                                                   @Override
+                                                   public void onFailure(@NonNull Exception e) {
+                                                       Log.w(TAG, "Error adding document", e);
+                                                   }
+                                               });
+
+
                                    } else {
                                        Log.d(TAG, "No such document");
                                    }
@@ -196,16 +311,39 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                }
                            }
                        });
+
+                       db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                           }
+                       })
+                               .addOnFailureListener(new OnFailureListener() {
+                                   @Override
+                                   public void onFailure(@NonNull Exception e) {
+                                       Log.w(TAG, "Error deleting document", e);
+                                   }
+                               });
+
+
+
                    }
                });
                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
+                       db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", false);
+                       //newTeam.add(m_Text);
                        dialog.cancel();
                    }
                });
 
                builder.show();
+               grabPlayers();
+               updateActivity();
+
 
            }
        });
@@ -285,6 +423,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
             }
 
+            public void refresh(View r){
+                grabPlayers();
+            }
 
 
 
@@ -300,6 +441,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        grabPlayers();
         //showPlayers();
     }
 
@@ -307,4 +449,8 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+
+
 }
