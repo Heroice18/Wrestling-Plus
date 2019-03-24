@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
         
-        setTournamentList();
-        
-        mAuth = FirebaseAuth.getInstance();
         setUp();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        setTournamentList();
     }
     
     /**
@@ -69,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     public void setTournamentList() {
         send = new Intent(this, TournamentActivity.class);
         tournamentList = findViewById(R.id.tournamentList);
+        totalTournaments = null;
+        totalTournaments = new ArrayList<String>();
     
         db.collection("user").document(currentUser.getEmail()).collection("tournaments")
             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
