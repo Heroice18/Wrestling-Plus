@@ -108,11 +108,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     public void grabPlayers(){
         //Log.d(TAG, "grabPlayers: Current" + currentUser.getDisplayName());
-    /*    playerType = findViewById(R.id.radioGroup);
+        playerType = findViewById(R.id.radioGroup);
         if (playerType.getCheckedRadioButtonId() != -1) {
             type = ((RadioButton) findViewById(playerType.getCheckedRadioButtonId())).getText().toString().toLowerCase();
             Log.d(TAG, "group: type is: " + type);
-        }*/
+        }
 
         Log.d(TAG, "grabPlayers: tournamnet" + current_Tournament);
         Log.d(TAG, "grabPlayers: type" + type);
@@ -226,6 +226,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                             }
                         }
                 });
+
     }
 
 
@@ -398,6 +399,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
             }
 
+            public void refresh(View r){
+                grabPlayers();
+            }
 
 
 
@@ -413,6 +417,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        grabPlayers();
         //showPlayers();
     }
 
