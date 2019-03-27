@@ -81,14 +81,4 @@ public class TournamentActivity extends AppCompatActivity {
     final TextView tournamentNameView = findViewById(R.id.tournamentName);
     tournamentNameView.setText(tournamentName);
   }
-  
-  public void viewMatch(View m) {
-    send = new Intent(this, MatchActivity.class);
-    
-    startActivity(send);
-  }
-  
-  
-  
-  
 }
