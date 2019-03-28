@@ -236,6 +236,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
 
                Log.d(TAG, "onItemClick player: " + player);
+               Log.d(TAG, "onItemClick: currentTournament " + current_Tournament);
 
                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
                builder.setTitle("Submit wrestler's weight:");
@@ -257,62 +258,78 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                        Log.d(TAG, "onClick: weight " + weight);
 
                        //This part will have to go into the default tournament setting in the tournaments section
-                       db.collection("tournaments").document(/*current_Tournament*/"testing").collection("divisions").
-                               document(type).collection("addedPlayersDebug").document("This is Here").update("weight", weight);
-                       db.collection("tournaments").document("testing").collection("divisions").
-                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", true);
-                       db.collection("tournaments").document("testing").collection("divisions").
-                               document(type).collection("addedPlayersDebug").document("This is Here").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                           @Override
-                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                               if (task.isSuccessful()) {
-                                   DocumentSnapshot document = task.getResult();
-                                   if (document.exists()) {
-                                       //MOved the team map to be public at the top of the file
-                                       tournamentMap = document.getData();
-                                       /****
-                                        * Here we'll iterate through and assign the names to the list view
-                                        */
-                                       Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                       transferMap = document.getData();
-                                       Log.d(TAG, "onComplete Transfer Map: " + transferMap);
-                                       db.collection("tournaments").document("testing").collection("divisions").
-                                               document(type).collection("confirmedPlayersDebug").add(transferMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                           @Override
-                                           public void onSuccess(DocumentReference documentReference) {
-                                               Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                           }
-                                       })
-                                               .addOnFailureListener(new OnFailureListener() {
-                                                   @Override
-                                                   public void onFailure(@NonNull Exception e) {
-                                                       Log.w(TAG, "Error adding document", e);
-                                                   }
-                                               });
+
+                       if(db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").get().isSuccessful()) {
+                           Log.d(TAG, "onClick: tournament addedPlayers");
+                           db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
+                                   document().update("weight", weight);
 
 
+                           db.collection("tournaments").document(current_Tournament).collection("divisions").
+                                   document(type).collection("addedPlayersDebug").document(playerData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                               @Override
+                               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                   if (task.isSuccessful()) {
+                                       DocumentSnapshot document = task.getResult();
+                                       if (document.exists()) {
+                                           //MOved the team map to be public at the top of the file
+                                           tournamentMap = document.getData();
+                                           /****
+                                            * Here we'll iterate through and assign the names to the list view
+                                            */
+                                           Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                           transferMap = document.getData();
+                                           Log.d(TAG, "onComplete Transfer Map: " + transferMap);
+                                           db.collection("tournaments").document("testing").collection("divisions").
+                                                   document(type).collection("confirmedPlayersDebug").add(transferMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                               @Override
+                                               public void onSuccess(DocumentReference documentReference) {
+                                                   Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                               }
+                                           })
+                                                   .addOnFailureListener(new OnFailureListener() {
+                                                       @Override
+                                                       public void onFailure(@NonNull Exception e) {
+                                                           Log.w(TAG, "Error adding document", e);
+                                                       }
+                                                   });
+
+
+                                       } else {
+                                           Log.d(TAG, "No such document");
+                                       }
                                    } else {
-                                       Log.d(TAG, "No such document");
+                                       Log.d(TAG, "get failed with ", task.getException());
                                    }
-                               } else {
-                                   Log.d(TAG, "get failed with ", task.getException());
                                }
-                           }
-                       });
+                           });
 
-                       db.collection("tournaments").document("testing").collection("divisions").
-                               document(type).collection("addedPlayersDebug").document("This is Here").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                           @Override
-                           public void onSuccess(Void aVoid) {
-                               Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                           }
-                       })
-                               .addOnFailureListener(new OnFailureListener() {
-                                   @Override
-                                   public void onFailure(@NonNull Exception e) {
-                                       Log.w(TAG, "Error deleting document", e);
-                                   }
-                               });
+                           db.collection("tournaments").document("testing").collection("divisions").
+                                   document(type).collection("addedPlayersDebug").document("This is Here").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                               @Override
+                               public void onSuccess(Void aVoid) {
+                                   Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                               }
+                           })
+                                   .addOnFailureListener(new OnFailureListener() {
+                                       @Override
+                                       public void onFailure(@NonNull Exception e) {
+                                           Log.w(TAG, "Error deleting document", e);
+                                       }
+                                   });
+
+
+
+                       }
+                       else{
+                           Log.d(TAG, "onClick: No Players added ");
+                       }
+
+
+                      /* db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", true);*/
+
+
 
 
 
@@ -432,4 +449,39 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+    public void finalizeTournament(View f){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You Sure You Want To Finalize Your Tournament?");
+        builder.setMessage("WARNING!! If you click finalize you cannot " +
+                "edit your tournament further. If everything is ready click finalize.");
+
+// Set up the input
+        //final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        //builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("Finalize", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //email input
+                //m_Text = input.getText().toString();
+                //adds the input to the list
+                //newTeam.add(m_Text);
+            }
+        });
+        builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
 }
