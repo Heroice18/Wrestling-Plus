@@ -217,7 +217,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (!documentSnapshot.exists()) {
                             Toast.makeText(teamManage.this, "Could not find wrestler", Toast.LENGTH_SHORT).show();
-                        } else if(documentSnapshot.get("userType") != "Wrestler") {
+                        } else if(!documentSnapshot.get("userType").equals("Wrestler")) {
                             Toast.makeText(teamManage.this, "Email must belong to a wrestler", Toast.LENGTH_SHORT).show();
                         } else {
                             String newFName = (String) documentSnapshot.get("firstName");
