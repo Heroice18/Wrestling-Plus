@@ -9,19 +9,26 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".manageTournaments" />
-        <activity android:name=".teamManage" />
-        <activity android:name=".CreateTournamentActivity"></activity>
-        <activity android:name=".MatchActivity" />
-        <activity android:name=".TournamentActivity" />
-        <activity android:name=".Login_Start">
+        <activity android:name=".manageTournaments"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".teamManage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateTournamentActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MatchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".TournamentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Login_Start"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
