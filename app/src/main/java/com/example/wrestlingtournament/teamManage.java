@@ -49,14 +49,17 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
     public static final String TAG = "teamManage";
     //This holds the players
-   ArrayList<String> newTeam = new ArrayList<String>();
-   //this is for the list of team names
-   ArrayList<String> totalTeam = new ArrayList<String>();
-   public Map<String, Object> teamMap = new HashMap<>();
-   public Map<String, Object> newWrestler = new HashMap<>();
-   public Map<String, Object> test = new HashMap<>();
+    ArrayList<String> newTeam = new ArrayList<String>();
+    //this is for the list of team names
+    ArrayList<String> totalTeam = new ArrayList<String>();
+    //This holds the coaches added tournaments
+    ArrayList<String> coachesTournaments = new ArrayList<>();
+    public Map<String, Object> teamMap = new HashMap<>();
+    public Map<String, Object> newWrestler = new HashMap<>();
+    public Map<String, Object> test = new HashMap<>();
 
-   private String m_Text = "";
+    private String m_Text = "";
+    private String dialogSpinnerText = "";
 
     FirebaseFirestore db;
     FirebaseUser currentUser;
@@ -102,6 +105,21 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        // Add coach's tournaments from database to an array to be fed to the spinner
+        db.collection("user").document(currentUser.getEmail()).collection("tournaments")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() & task.getResult() != null) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                synchronized (this) {
+                                    coachesTournaments.add(document.getId());
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -257,57 +275,28 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      * Take all members of currently displayed team and add to a tournament.
      */
     public void addTeamToTournament(View view) {
-        final Spinner teamLoad = (Spinner) findViewById(R.id.spinner);
-        AlertDialog.Builder builder = new AlertDialog.Builder(teamManage.this);
+        final Spinner teamLoad = findViewById(R.id.spinner);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Submit this team to tournament:");
 
-        // Add coaches tournaments from database to an array to be fed to the spinner
-        final List<String> coachesTournaments = new ArrayList<>();
-
-        Thread myThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                db.collection("user").document(currentUser.getEmail()).collection("tournaments")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        coachesTournaments.add(document.getId());
-                                    }
-                                }
-                            }
-                        });
-            }
-        });
-
-        myThread.start();
-        try {
-            myThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        List<String> coachesTournamentsList = new ArrayList<>();
-        coachesTournamentsList = coachesTournaments;
         // Set up the input
-        final Spinner input = new Spinner(teamManage.this);
+        final Spinner dialog_spinner = new Spinner(this);
         // Specify the type of input expected
-        ArrayAdapter<String> data = new ArrayAdapter<>(teamManage.this,
-                android.R.layout.simple_spinner_item, coachesTournamentsList);
+        ArrayAdapter<String> data = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, coachesTournaments);
+        dialog_spinner.getOnItemSelectedListener();
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        input.setAdapter(data);
-        builder.setView(input);
+        dialog_spinner.setAdapter(data);
+        builder.setView(dialog_spinner);
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_Text = input.toString();
+                dialogSpinnerText = dialog_spinner.getSelectedItem().toString();
 
                 Map<String, Object> tournamentName = new HashMap<>();
-                tournamentName.put("code", m_Text);
+                tournamentName.put("code", dialogSpinnerText);
                 //tournamentName.put("name", db.collection("user"));
 
                 for(Map.Entry<String,Object> entry : teamMap.entrySet()){
@@ -315,11 +304,11 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                     playerName.put("name", entry.getValue().toString());
                     playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
 
-                    db.collection("tournaments").document(m_Text)
+                    db.collection("tournaments").document(dialogSpinnerText)
                             .collection("addedPlayers").document(entry.getKey())
                             .set(playerName, SetOptions.merge());
                     db.collection("user").document(entry.getKey())
-                            .collection("tournaments").document(m_Text)
+                            .collection("tournaments").document(dialogSpinnerText)
                             .set(tournamentName);
                 }
 
