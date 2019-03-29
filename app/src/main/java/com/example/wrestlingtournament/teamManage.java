@@ -233,6 +233,8 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                                     .collection("teams")
                                     .document(teamLoad.getSelectedItem().toString().toLowerCase())
                                     .set(newWrestler, SetOptions.merge());
+                            newTeam.clear();
+                            getWrestlersFromTeam();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -253,7 +255,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         builder.show();
-        getWrestlersFromTeam();
+
     }
 
     /**

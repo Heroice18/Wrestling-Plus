@@ -399,7 +399,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                         //now we will put the tournament into the coaches tournament list
                                                         db.collection("user").document(coachEmail)
                                                                 .collection("tournaments").document(current_Tournament)
-                                                                .set(task.getResult().getData());
+                                                                .set(task.getResult().getData(), SetOptions.merge());
                                                         Toast.makeText(getApplicationContext(), "Coach added to tournament!",
                                                                 Toast.LENGTH_SHORT).show();
                                                     } else {
@@ -458,20 +458,25 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         builder.setMessage("WARNING!! If you click finalize you cannot " +
                 "edit your tournament further. If everything is ready click finalize.");
 
-// Set up the input
-        //final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-        //builder.setView(input);
-
 // Set up the buttons
         builder.setPositiveButton("Finalize", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //email input
-                //m_Text = input.getText().toString();
-                //adds the input to the list
-                //newTeam.add(m_Text);
+
+                db.collection("user").document(currentUser.getEmail()).collection("tournaments")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful() & task.getResult() != null) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String id = document.getId();
+
+                                    }
+                                }
+                            }
+                        });
+
             }
         });
         builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {

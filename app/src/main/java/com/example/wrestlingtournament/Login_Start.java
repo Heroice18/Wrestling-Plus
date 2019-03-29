@@ -172,25 +172,25 @@ public class Login_Start extends AppCompatActivity{
                                                 .set(exampleTournament);
                                     }
 
-                                    if (type.equals("Coach")) {
-                                        Map<String, Object> exampleTournament = new HashMap<>();
-                                        exampleTournament.put("name", "Example Tournament");
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("tournaments").document("RexFight2019")
-                                                .set(exampleTournament);
-
-                                        Map<String, Object> teamsExist = new HashMap<>();
-                                        teamsExist.put("exists", true);
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("teams").document("varsity")
-                                                .set(teamsExist);
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("teams").document("juniorvarsity")
-                                                .set(teamsExist);
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("teams").document("freshman")
-                                                .set(teamsExist);
-                                    }
+//                                    if (type.equals("Coach")) {
+//                                        Map<String, Object> exampleTournament = new HashMap<>();
+//                                        exampleTournament.put("name", "Example Tournament");
+//                                        db.collection("user").document(String.valueOf(email))
+//                                                .collection("tournaments").document("RexFight2019")
+//                                                .set(exampleTournament);
+//
+//                                        Map<String, Object> teamsExist = new HashMap<>();
+//                                        teamsExist.put("exists", true);
+//                                        db.collection("user").document(String.valueOf(email))
+//                                                .collection("teams").document("varsity")
+//                                                .set(teamsExist);
+//                                        db.collection("user").document(String.valueOf(email))
+//                                                .collection("teams").document("juniorvarsity")
+//                                                .set(teamsExist);
+//                                        db.collection("user").document(String.valueOf(email))
+//                                                .collection("teams").document("freshman")
+//                                                .set(teamsExist);
+//                                    }
 
                                     //go to sign in page
                                     returnBack(view);
