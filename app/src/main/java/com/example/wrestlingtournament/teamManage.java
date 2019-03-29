@@ -313,7 +313,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                             .set(playerName, SetOptions.merge());
                     db.collection("user").document(entry.getKey())
                             .collection("tournaments").document(dialogSpinnerText)
-                            .set(tournamentName);
+                            .set(tournamentName, SetOptions.merge());
                 }
 
 
