@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WrestlingTournament</string>
+    <string name="app_name">Wrestling Plus</string>
     <string name="view_match">View Match</string>
     <string name="action_settings">Settings</string>
     <string-array name="teamSelection">Team List</string-array>
@@ -8,6 +8,10 @@
         <item>Junior Varsity</item>
         <item>Freshman</item>
     </string-array>
+    <color name="blue">#9FDDD8</color>
+    <color name="gray">#C3CDC5</color>
+    <color name="orange">#FF9100</color>
+    <color name="black">#000000</color>
     <string-array name="weightClass">
         <item>&lt; 106</item>
         <item>107–113</item>
