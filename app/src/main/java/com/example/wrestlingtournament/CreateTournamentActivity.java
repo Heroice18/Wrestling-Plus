@@ -17,11 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,20 +118,20 @@ public class CreateTournamentActivity extends AppCompatActivity {
                                         adminTournamentAddition.put("code", tCode);
                                         adminTournamentAddition.put("date", tDate);
                                         db.collection("user").document(adminEmail).collection("tournaments")
-                                                .document(tCode).set(adminTournamentAddition, SetOptions.merge());
+                                                .document(tCode).set(adminTournamentAddition);
 
                                         Log.d(TAG, "onComplete: Successfully added tournament to database");
                                         if (freshmanCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)
-                                                    .collection("divisions").document("freshman").set(fMap, SetOptions.merge());
+                                                    .collection("divisions").document("freshman").set(fMap);
                                         }
                                         if (jvCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)
-                                                    .collection("divisions").document("juniorvarsity").set(jMap, SetOptions.merge());
+                                                    .collection("divisions").document("juniorvarsity").set(jMap);
                                         }
                                         if (varsityCheck.isChecked()) {
                                             db.collection("tournaments").document(tCode)
-                                                    .collection("divisions").document("varsity").set(vMap, SetOptions.merge());
+                                                    .collection("divisions").document("varsity").set(vMap);
                                         }
                                         Toast.makeText(getApplicationContext(), "Tournament " + tName + " has successfully been created", Toast.LENGTH_LONG).show();
                                         Log.d(TAG, "onComplete: every successfully added to the database for the tournament");
