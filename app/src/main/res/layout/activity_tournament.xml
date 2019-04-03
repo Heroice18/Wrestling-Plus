@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tournamentName" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/nextRoundButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -73,17 +73,17 @@
         app:layout_constraintBottom_toTopOf="@+id/matchList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton2"
+        app:layout_constraintStart_toEndOf="@+id/lastRoundButton"
         app:srcCompat="@drawable/forwardicon" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/lastRoundButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/matchList"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/nextRoundButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"

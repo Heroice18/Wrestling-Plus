@@ -23,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Displays the tournament information to the user.
@@ -56,12 +57,31 @@ public class TournamentActivity extends AppCompatActivity {
   private void setMatchList() {
     send = new Intent(this, MatchActivity.class);
     matchList = findViewById(R.id.matchList);
+    final String[] players;
+    myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+    db.collection("tournaments").document("fc2019").collection("divisions")
+            .document("freshman").collection("test").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+      @Override
+      public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        Vector<String> players = new Vector<String>();
+        for (QueryDocumentSnapshot document : task.getResult()) {
+          Log.d(TAG, document.getId() + " => " + document.getData());
+          players.add(document.getData().get("name").toString());
+          //myAdapter.add(document.getData().get("name").toString());
+        }
+        for(int i = 0; i < players.size(); i++) {
+          String player1 = players.get(i++);
+          String player2 = players.get(i);
+          myAdapter.add(player1 + " VS " + player2);
+        }
+        matchList.setAdapter(myAdapter);
+      }
+    });
+    //String[] temp = {"Player 1 vs Player 2", "Player 3 vs Player 4", "Player 5 vs Player 6", "Player 7 vs Player 8", "Player 9 vs Player 10", "Player 11 vs Player 12"};
+
+
     
-    String[] temp = {"Player 1 vs Player 2", "Player 3 vs Player 4", "Player 5 vs Player 6", "Player 7 vs Player 8", "Player 9 vs Player 10", "Player 11 vs Player 12"};
-    
-    myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, temp);
-    
-    matchList.setAdapter(myAdapter);
+
   
     AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
       @Override
