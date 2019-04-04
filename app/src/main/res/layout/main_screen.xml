@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange">
+    android:background="@color/Light_Blue">
 
     <TextView
         android:id="@+id/textView5"
@@ -138,7 +138,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/blue"
+        android:background="@color/Teal"
         android:divider="#000"
         android:dividerHeight="2sp"
         app:layout_constraintBottom_toBottomOf="parent"

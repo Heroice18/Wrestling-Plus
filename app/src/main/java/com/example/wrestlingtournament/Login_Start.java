@@ -1,6 +1,8 @@
 package com.example.wrestlingtournament;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,6 +58,7 @@ public class Login_Start extends AppCompatActivity{
     FirebaseFirestore db;
     FirebaseUser fbUser;
     UserObject currentUser;
+    Button debugAD, debugCH, debugWR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,12 @@ public class Login_Start extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
+        debugAD = findViewById(R.id.Admin);
+        debugAD.setVisibility(GONE);
+        debugCH = findViewById(R.id.Coach);
+        debugCH.setVisibility(GONE);
+        debugWR = findViewById(R.id.Player);
+        debugWR.setVisibility(GONE);
 
         first = findViewById(R.id.fName);
         first.setVisibility(GONE);
@@ -84,6 +93,9 @@ public class Login_Start extends AppCompatActivity{
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
+//        Button create = findViewById(R.id.login);
+//        create.setBackgroundColor(Color.BLUE);
+        //emailEditText.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -213,6 +225,7 @@ public class Login_Start extends AppCompatActivity{
 
     public void logInUser(View b)
     {
+        Toast.makeText(getApplicationContext(), "Please wait logging you in now", Toast.LENGTH_LONG).show();
         final String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
