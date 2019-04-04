@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -38,9 +41,9 @@ public class TournamentActivity extends AppCompatActivity {
   FirebaseUser user;
   FirebaseAuth mAuth;
   String tournamentName;
-  Intent send;
   ArrayAdapter<String> myAdapter;
   ListView matchList;
+  public Map<String, String> playerMap = new HashMap<>();
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,8 @@ public class TournamentActivity extends AppCompatActivity {
   }
   
   private void setMatchList() {
-    send = new Intent(this, MatchActivity.class);
+
+
     matchList = findViewById(R.id.matchList);
     final String[] players;
     myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
@@ -67,6 +71,7 @@ public class TournamentActivity extends AppCompatActivity {
         for (QueryDocumentSnapshot document : task.getResult()) {
           Log.d(TAG, document.getId() + " => " + document.getData());
           players.add(document.getData().get("name").toString());
+          playerMap.put((document.getId()), document.getData().get("name").toString());
           //myAdapter.add(document.getData().get("name").toString());
         }
         for(int i = 0; i < players.size(); i++) {
@@ -77,18 +82,43 @@ public class TournamentActivity extends AppCompatActivity {
         matchList.setAdapter(myAdapter);
       }
     });
-    //String[] temp = {"Player 1 vs Player 2", "Player 3 vs Player 4", "Player 5 vs Player 6", "Player 7 vs Player 8", "Player 9 vs Player 10", "Player 11 vs Player 12"};
-
-
-    
-
   
     AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // String itemValue = (String) matchList.getItemAtPosition(position);
-        
-        startActivity(send);
+
+          //get the string from the array list
+          String match = matchList.getItemAtPosition(position).toString();
+        Log.d(TAG, "onItemClick: match is: " + match);
+
+        //find where in the match string is vs so we can break the string into two separate names
+        int findVs = match.indexOf(" VS ");
+        Log.d(TAG, "onItemClick: vs was found at indx: " + findVs);
+
+        //get the players names from the match string
+        String player1 = match.substring(0, findVs);
+        String player2 = match.substring(findVs + 4);
+
+        Log.d(TAG, "onItemClick: player 1 is: " + player1);
+        Log.d(TAG, "onItemClick: player 2 is: " + player2);
+
+        Intent intent = new Intent(TournamentActivity.this, MatchActivity.class);
+
+        for(HashMap.Entry<String, String>entry : playerMap.entrySet()){
+              String playerName = entry.getValue();
+              //pass the two players information on to the match activity
+              if(playerName.equals(player1)) {
+
+                  intent.putExtra("player1name", entry.getValue());
+                  intent.putExtra("player1email", entry.getKey());
+              }
+            if(playerName.equals(player2)) {
+                intent.putExtra("player2name", entry.getValue());
+                intent.putExtra("player2email", entry.getKey());
+            }
+          }
+
+        startActivity(intent);
       }
     };
   

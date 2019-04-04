@@ -150,58 +150,50 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                              */
                             Log.d(TAG, "9onComplete key: " + key);
                             String value = entry.getValue().toString();
-                            //String division = "freshman";
-                            if(key.equals("division")){
-                                divisionName = value;
-                            }
                             if(key.equals("name")) {
                                 //String value = entry.getValue().toString();
-//                                Log.d(TAG, "onComplete value: " + value);
-//                                Log.d(TAG, "onComplete: Entering if name");
-
-                                Log.d(TAG, "9onComplete: type this " + type);
-                                Log.d(TAG, "9onComplete: division this " + divisionName);
-                                if(divisionName.equals(type)) {
-                                    Log.d(TAG, "9onComplete: Entering == ");
-                                    populate.add(value);
-                                    emailData.add(document.getId());
-                                    String passive = value;
-                                    String addto;
-                                    ArrayList<String> passiveID = new ArrayList<String>();
-                                    addto = document.getId();
-                                    passiveID.add(addto);
-                                    dataStore.put(passive, passiveID);
-                                    divisionStore.put(passive, divisionName);
-                                }
-//                                Log.d(TAG, "onComplete: dataStore " + dataStore);
-//                                Log.d(TAG, "onComplete: divisionName " + divisionName);
-//                                Log.d(TAG, "onComplete: divisionStore " + divisionStore);
+                                Log.d(TAG, "onComplete value: " + value);
+                                Log.d(TAG, "onComplete: Entering if name");
+                                populate.add(value);
+                                emailData.add(document.getId());
+                                String passive = value;
+                                String addto;
+                                ArrayList<String> passiveID = new ArrayList<String>();
+                                addto = document.getId();
+                                passiveID.add(addto);
+                                dataStore.put(passive, passiveID);
+                                Log.d(TAG, "onComplete: dataStore " + dataStore);
 
 
                             }
                             if(key.equals("email")){
 
 
-                                //Log.d(TAG, "onComplete: data " + emailData);
+                                Log.d(TAG, "onComplete: data " + emailData);
                             }
                             //emailData.put(key, value);
-//                            Log.d(TAG, "onComplete: playerEmail " + emailData);
-//
-//                            Log.d(TAG, "onComplete passing: " + totalTournaments);
+                            Log.d(TAG, "onComplete: playerEmail " + emailData);
+
+                            Log.d(TAG, "onComplete passing: " + totalTournaments);
                         }
                     }
-                    //Log.d(TAG, "onComplete: tournament2 " + TournamentStore);
+                    Log.d(TAG, "onComplete: tournament2 " + TournamentStore);
 
                     newTeam = populate;
                     ArrayAdapter adapter = new ArrayAdapter<String>(manageTournaments.this,
                             R.layout.activity_listview, newTeam);
-//                    Log.d(TAG, "onComplete: newTeam " + newTeam);
-//                    Log.d(TAG, "onComplete: populate " + populate);
-
+                    Log.d(TAG, "onComplete: newTeam " + newTeam);
+                    Log.d(TAG, "onComplete: populate " + populate);
+//                    Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
+//                    teamLoad.setOnItemSelectedListener(this);
+                    //teamLoad.setAdapter(adapter);
+//                    data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//                    teamLoad.setAdapter(data);
                     ListView listView = (ListView) findViewById(R.id.PlayerList);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
-
+                    //updateActivity();
 
                 }
 
@@ -411,20 +403,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                    public void onClick(DialogInterface dialog, int which) {
                        //email input
                        m_Text = input.getText().toString();
-                       /*
-                       Look into making sure we can do decimals gotothis
-                        */
-
-                       int weight = (Integer) Integer.parseInt(m_Text);
-
-                       //gotothis weight
-//                       float weight2 = Float.parseFloat(m_Text);
-//                       weight = Math.round(weight2);
-//                       Log.d(TAG, "onClick: weight after math " + weight);
-                       //weight = (Integer) weight2;
-
-                       //weight = (Integer) weight;
-
+                       int weight = Integer.parseInt(m_Text);
                        //String player = manageTournaments.this;
                        Log.d(TAG, "onClick: weight " + weight);
 
@@ -433,74 +412,183 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                        //if(db.collection("tournaments").document(current_Tournament).collection("addedPlayers").get().isSuccessful()) {
 
                        Log.d(TAG, "onClick: tournament addedPlayers");
-                       Map<String, Object> playerStat = new HashMap<>();
-                       playerStat.put("weight", weight);
+                           Map<String, Object> playerStat = new HashMap<>();
+                           playerStat.put("weight", weight);
                        Log.d(TAG, "onClick: tournamentStore " + TournamentStore);
-
-                       //data player stuff
-                       Log.d(TAG, "onSuccess: type " + type);
-                       create.put("division", type);
-                       create.put("name", playerData);
-                       create.put("weight", weight);
 
                            /*
                            Set up the weight and apply it to the user
                             */
+//                       db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
+//                               whereEqualTo(playerData, true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                           @Override
+//                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                               if (task.isSuccessful()) {
+//
+//                                   Log.d(TAG, "onComplete: CHECKING");
+//                                   Log.d(TAG, "onComplete: task " + task.getResult());
+//                                   Log.d(TAG, "onComplete: taskDoc ");
+//                                   for (QueryDocumentSnapshot document : task.getResult()) {
+//                                       Log.d(TAG, document.getId() + " ==> " + document.getData());
+//                                       Log.d(TAG, "onComplete: 99");
+//                                   }
+//                               } else {
+//                                   Log.d(TAG, "Error getting documents: ", task.getException());
+//                               }
+//                           }
+//                       });
+//                               get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                           @Override
+//                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                               if (task.isSuccessful()) {
+//                                   DocumentSnapshot document = task.getResult();
+//                                   if (document.exists()) {
+//                                       Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                                   } else {
+//                                       Log.d(TAG, "No such document");
+//                                   }
+//                               } else {
+//                                   Log.d(TAG, "get failed with ", task.getException());
+//                               }
+//                           }
+//                       });
+
+
+//                       if(db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
+//                               document(email).){
+//
+//                       }
 
                        db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
                                document(email).set(playerStat, SetOptions.mergeFields("weight"))
                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                   @Override
-                                   public void onSuccess(Void aVoid) {
-                                       Log.d(TAG, "onSuccess: Worked");
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               Log.d(TAG, "onSuccess: Worked");
 
                                /*
                                Move the data to the division area
                                 */
-                                       db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
-                                               document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                               db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
+                                       document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                   @Override
+                                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                               if (task.isSuccessful()) {
-                                                   DocumentSnapshot document = task.getResult();
-                                                   if (document != null) {
-                                                       Log.d(TAG, "onComplete4: " + type);
-                                               /*
-                                               Fix here gotothis - Done
-                                                */
-                                                       db.collection("tournaments").document(current_Tournament).collection("divisions")
-                                                               .document(type).collection("wrestlers").document(email).set(create, SetOptions.merge()).
-                                                               addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                   @Override
-                                                                   public void onSuccess(Void aVoid) {
-                                                                       Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                                   }
-                                                               });
-                                                   } else {
-                                                       Log.d(TAG, "onComplete: Failure");
-                                                   }
-                                               }
+                                       if (task.isSuccessful()) {
+                                           DocumentSnapshot document = task.getResult();
+                                           if(document != null){
+                                               Log.d(TAG, "onComplete4: " + type);
+                                               db.collection("tournaments").document(current_Tournament).collection("divisions")
+                                                       .document(type).collection(email);//.add({
+                                                       //       name:player
+                                               //});
+                                                       }
+                                                               //document.getData()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                   @Override
+//                                                   public void onSuccess(Void aVoid) {
+//                                                       Log.d(TAG, "onSuccess: creating");
+//
+//                                                   }
+//                                               });
                                            }
-                                       }).addOnFailureListener(new OnFailureListener() {
-                                           @Override
-                                           public void onFailure(@NonNull Exception e) {
-                                               Log.d(TAG, "onFailure: Failed");
-                                           }
-                                       });
+
+
+                                       else{
+                                           Log.d(TAG, "onComplete: Failure");
+                                       }
+                               }
+                               });
+                           }
+                       }).addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+                               Log.d(TAG, "onFailure: Failed");
+                           }
+
+
+                       });
+
+//                           db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
+//                                   document().update("weight", weight);
+
+
+//                           db.collection("tournaments").document(current_Tournament).collection("divisions").
+//                                   document(type).collection("addedPlayersDebug").document(playerData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                               @Override
+//                               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                   if (task.isSuccessful()) {
+//                                       DocumentSnapshot document = task.getResult();
+//                                       if (document.exists()) {
+//                                           //MOved the team map to be public at the top of the file
+//                                           tournamentMap = document.getData();
+//                                           /****
+//                                            * Here we'll iterate through and assign the names to the list view
+//                                            */
+//                                           Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                                           transferMap = document.getData();
+//                                           Log.d(TAG, "onComplete Transfer Map: " + transferMap);
+//                                           db.collection("tournaments").document("testing").collection("divisions").
+//                                                   document(type).collection("confirmedPlayersDebug").add(transferMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                               @Override
+//                                               public void onSuccess(DocumentReference documentReference) {
+//                                                   Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+//                                               }
+//                                           })
+//                                                   .addOnFailureListener(new OnFailureListener() {
+//                                                       @Override
+//                                                       public void onFailure(@NonNull Exception e) {
+//                                                           Log.w(TAG, "Error adding document", e);
+//                                                       }
+//                                                   });
+//
+//
+//                                       } else {
+//                                           Log.d(TAG, "No such document");
+//                                       }
+//                                   } else {
+//                                       Log.d(TAG, "get failed with ", task.getException());
+//                                   }
+//                               }
+//                           });
+
+//                           db.collection("tournaments").document("testing").collection("divisions").
+//                                   document(type).collection("addedPlayersDebug").document("This is Here").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                               @Override
+//                               public void onSuccess(Void aVoid) {
+//                                   Log.d(TAG, "DocumentSnapshot successfully deleted!");
+//                               }
+//                           })
+//                                   .addOnFailureListener(new OnFailureListener() {
+//                                       @Override
+//                                       public void onFailure(@NonNull Exception e) {
+//                                           Log.w(TAG, "Error deleting document", e);
+//                                       }
+//                                   });
+
+
+
+                       /*}
+                       else{
+                           Log.d(TAG, "onClick: No Players added ");
+                       }
+
+
+                      /* db.collection("tournaments").document("testing").collection("divisions").
+                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", true);*/
+
+
+
                 /*
                 Updates the ListView
                  */
-                                       ArrayAdapter<String> array = new ArrayAdapter<String>(manageTournaments.this,
-                                               android.R.layout.simple_list_item_1, newTeam);
-                                       ListView part = (ListView) findViewById(R.id.PlayerList);
-                                       part.setAdapter(array);
-                                       newTeam.remove(playerData);
-                                       array.notifyDataSetChanged();
-                                   }
-                               });
-                            }
-                       });
+                ArrayAdapter<String> array = new ArrayAdapter<String>(manageTournaments.this,
+                        android.R.layout.simple_list_item_1, newTeam);
+                ListView part = (ListView) findViewById(R.id.PlayerList);
+                part.setAdapter(array);
+                newTeam.remove(playerData);
+                array.notifyDataSetChanged();
+                   }
+               });
                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -667,11 +755,5 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
         builder.show();
     }
-
-
-
-
-
-
 
 }
