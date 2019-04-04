@@ -8,10 +8,13 @@
         <item>Junior Varsity</item>
         <item>Freshman</item>
     </string-array>
-    <color name="blue">#9FDDD8</color>
-    <color name="gray">#C3CDC5</color>
-    <color name="orange">#FF9100</color>
-    <color name="black">#000000</color>
+    <color name="Blue">#3D6DCD</color>
+    <color name="Light_Blue">#9FDDD8</color>
+    <color name="Teal">#B4CBCA</color>
+    <color name="Orange">#FF8000</color>
+    <color name="Light_Orange">#FF9933</color>
+    <color name="Black">#000000</color>
+
     <string-array name="weightClass">
         <item>&lt; 106</item>
         <item>107–113</item>

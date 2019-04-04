@@ -415,17 +415,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                        Look into making sure we can do decimals gotothis
                         */
 
-                       int weight = (Integer) Integer.parseInt(m_Text);
+                       float weight2 = (Float) Float.parseFloat(m_Text);
+                       int weight = (int) Math.floor(weight2);
+                       //int weight = (int) weight2;
+                       Log.d(TAG, "onClick: Math complete " + weight);
 
-                       //gotothis weight
-//                       float weight2 = Float.parseFloat(m_Text);
-//                       weight = Math.round(weight2);
-//                       Log.d(TAG, "onClick: weight after math " + weight);
-                       //weight = (Integer) weight2;
-
-                       //weight = (Integer) weight;
-
-                       //String player = manageTournaments.this;
                        Log.d(TAG, "onClick: weight " + weight);
 
                        //This part will have to go into the default tournament setting in the tournaments section
