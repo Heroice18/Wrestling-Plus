@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -323,6 +324,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                playerType = findViewById(R.id.radioGroup);
                if (playerType.getCheckedRadioButtonId() != -1) {
                    type = ((RadioButton) findViewById(playerType.getCheckedRadioButtonId())).getText().toString().toLowerCase();
+                   type = type.replace(" ", "");
                    Log.d(TAG, "group: type is: " + type);
                }
 
@@ -402,7 +404,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 // Set up the input
                final EditText input = new EditText(manageTournaments.this);
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-               input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+               input.setInputType(InputType.TYPE_CLASS_NUMBER);
                builder.setView(input);
 
 // Set up the buttons
@@ -627,25 +629,174 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void finalizeTournament(View f){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("You Sure You Want To Finalize Your Tournament?");
-        builder.setMessage("WARNING!! If you click finalize you cannot " +
-                "edit your tournament further. If everything is ready click finalize.");
+        builder.setTitle("Are You Sure You Want To Finalize Your Tournament?");
+        builder.setMessage("WARNING! If you click finalize you cannot " +
+                "edit your tournament further. If everything is ready, click finalize.");
 
 // Set up the buttons
         builder.setPositiveButton("Finalize", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                db.collection("user").document(currentUser.getEmail()).collection("tournaments")
-                        .get()
+                db.collection("tournaments").document(current_Tournament)
+                        .collection("addedPlayers").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful() & task.getResult() != null) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        String id = document.getId();
+                                    for (final QueryDocumentSnapshot document : task.getResult()) {
+                                        db.collection("tournaments").document(current_Tournament)
+                                                .collection("divisions").document(document.getId())
+                                                .collection("wrestlers").get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                                                        if (task2.isSuccessful() & task2.getResult() != null) {
+                                                            String bracket = "";
+                                                            String email;
+                                                            String name;
+                                                            HashMap<String, Object> bracketMap = new HashMap<>();
+                                                            HashMap<String, Object> wrestlerMap = new HashMap<>();
+                                                            int count = 0;
+                                                            int bracketCount = 0;
+                                                            int count106 = 0;
+                                                            int count113 = 0;
+                                                            int count120 = 0;
+                                                            int count126 = 0;
+                                                            int count132 = 0;
+                                                            int count138 = 0;
+                                                            int count145 = 0;
+                                                            int count152 = 0;
+                                                            int count160 = 0;
+                                                            int count170 = 0;
+                                                            int count182 = 0;
+                                                            int count195 = 0;
+                                                            int count220 = 0;
+                                                            int count285 = 0;
+                                                            int count286 = 0;
+                                                            for (QueryDocumentSnapshot document2 : task2.getResult()) {
+                                                                bracketMap.clear();
+                                                                wrestlerMap.clear();
+                                                                email = document2.getId();
+                                                                name = document2.getString("name");
+                                                                int weight = Integer.parseInt(document2.getString("weight"));
 
+                                                                if (weight <= 106) {
+                                                                    count106++;
+                                                                    if(count106 % 2 == 0)
+                                                                        bracketCount = count106;
+                                                                    bracket = "<106";
+                                                                    count = count106;
+                                                                } else if (weight <= 113) {
+                                                                    count113++;
+                                                                    if(count113 % 2 == 0)
+                                                                        bracketCount = count113;
+                                                                    bracket = "107-113";
+                                                                    count = count113;
+                                                                } else if (weight <= 120) {
+                                                                    count120++;
+                                                                    if(count120 % 2 == 0)
+                                                                        bracketCount = count120;
+                                                                    bracket = "114-120";
+                                                                    count = count120;
+                                                                } else if (weight <= 126) {
+                                                                    count126++;
+                                                                    if(count126 % 2 == 0)
+                                                                        bracketCount = count126;
+                                                                    bracket = "121-126";
+                                                                    count = count126;
+                                                                } else if (weight <= 132) {
+                                                                    count132++;
+                                                                    if(count132 % 2 == 0)
+                                                                        bracketCount = count132;
+                                                                    bracket = "127-132";
+                                                                    count = count132;
+                                                                } else if (weight <= 138) {
+                                                                    count138++;
+                                                                    if(count138 % 2 == 0)
+                                                                        bracketCount = count138;
+                                                                    bracket = "133-138";
+                                                                    count = count138;
+                                                                } else if (weight <= 145) {
+                                                                    count145++;
+                                                                    if(count145 % 2 == 0)
+                                                                        bracketCount = count145;
+                                                                    bracket = "139-145";
+                                                                    count = count145;
+                                                                } else if (weight <= 152) {
+                                                                    count152++;
+                                                                    if(count152 % 2 == 0)
+                                                                        bracketCount = count152;
+                                                                    bracket = "146-152";
+                                                                    count = count152;
+                                                                } else if (weight <= 160) {
+                                                                    count160++;
+                                                                    if(count160 % 2 == 0)
+                                                                        bracketCount = count160;
+                                                                    bracket = "153-160";
+                                                                    count = count160;
+                                                                } else if (weight <= 170) {
+                                                                    count170++;
+                                                                    if(count170 % 2 == 0)
+                                                                        bracketCount = count170;
+                                                                    bracket = "161-170";
+                                                                    count = count170;
+                                                                } else if (weight <= 182) {
+                                                                    count182++;
+                                                                    if(count182 % 2 == 0)
+                                                                        bracketCount = count182;
+                                                                    bracket = "171-182";
+                                                                    count = count182;
+                                                                } else if (weight <= 195) {
+                                                                    count195++;
+                                                                    if(count195 % 2 == 0)
+                                                                        bracketCount = count195;
+                                                                    bracket = "183-195";
+                                                                    count = count195;
+                                                                } else if (weight <= 220) {
+                                                                    count220++;
+                                                                    if(count220 % 2 == 0)
+                                                                        bracketCount = count220;
+                                                                    bracket = "196-220";
+                                                                    count = count220;
+                                                                } else if (weight <= 285) {
+                                                                    count285++;
+                                                                    if(count285 % 2 == 0)
+                                                                        bracketCount = count285;
+                                                                    bracket = "221-285";
+                                                                    count = count285;
+                                                                } else {
+                                                                    count286++;
+                                                                    if(count286 % 2 == 0)
+                                                                        bracketCount = count286;
+                                                                    bracket = ">285";
+                                                                    count = count286;
+                                                                }
+
+                                                                bracketMap.put("name", bracket);
+                                                                bracketMap.put("numInRound1", bracketCount);
+                                                                bracketMap.put("initialWrestlerCount", count);
+                                                                bracketMap.put("currentWrestlerCount", count);
+                                                                db.collection("tournaments").document(current_Tournament)
+                                                                        .collection("divisions").document(document.getId())
+                                                                        .collection("brackets").document(bracket)
+                                                                        .set(bracketMap, SetOptions.merge());
+
+                                                                wrestlerMap.put("email", email);
+                                                                wrestlerMap.put("name", name);
+                                                                wrestlerMap.put("weight", weight);
+                                                                wrestlerMap.put("winCount", 0);
+                                                                db.collection("tournaments").document(current_Tournament)
+                                                                        .collection("divisions").document(document.getId())
+                                                                        .collection("brackets").document(bracket)
+                                                                        .collection("wrestlers").document(Integer.toString(count))
+                                                                        .set(wrestlerMap, SetOptions.merge());
+                                                            }
+                                                        }
+                                                    }
+                                                });
                                     }
+
                                 }
                             }
                         });
@@ -661,11 +812,4 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
         builder.show();
     }
-
-
-
-
-
-
-
 }
