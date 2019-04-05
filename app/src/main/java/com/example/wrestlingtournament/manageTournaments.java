@@ -639,7 +639,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
             public void onClick(DialogInterface dialog, int which) {
 
                 db.collection("tournaments").document(current_Tournament)
-                        .collection("addedPlayers").get()
+                        .collection("divisions").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -679,8 +679,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                                 wrestlerMap.clear();
                                                                 email = document2.getId();
                                                                 name = document2.getString("name");
-                                                                int weight = Integer.parseInt(document2.getString("weight"));
-
+                                                                int weight = document2.getLong("weight").intValue();
                                                                 if (weight <= 106) {
                                                                     count106++;
                                                                     if(count106 % 2 == 0)
