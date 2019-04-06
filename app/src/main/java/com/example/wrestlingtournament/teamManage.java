@@ -1,7 +1,10 @@
 package com.example.wrestlingtournament;
 
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,12 +38,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.view.View.VISIBLE;
+import static java.security.AccessController.getContext;
 
 /**
  * This Activity holds everything we need for the activity_team_manage.xml including creation,
@@ -183,8 +189,16 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      */
     public void confirmAdd(View c)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Submit wrestler's email:");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
+//        TextView title = null;
+//        title.setText("Submit Wrestler's Email");
+//        title.setTypeface(null, Typeface.BOLD);
+        String total = "Submit Wrestler's Email";
+
+
+        builder.setTitle(R.string.submit_wrestler);
+
+        builder.setIcon(R.drawable.wplus);
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -262,16 +276,19 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      */
     public void addTeamToTournament(View view) {
         final Spinner teamLoad = findViewById(R.id.spinner);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Submit this team to tournament:");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
+        builder.setTitle(R.string.submit_team);
+        builder.setIcon(R.drawable.wplus);
 
         // Set up the input
         final Spinner dialog_spinner = new Spinner(this);
         // Specify the type of input expected
         ArrayAdapter<String> data = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, coachesTournaments);
+                R.layout.spinner_cell, coachesTournaments);
         dialog_spinner.getOnItemSelectedListener();
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        data.setDropDownViewResource(R.layout.spinner_dropdown);
+//        dialog_spinner.getBackground().setColorFilter(ContextCompat.getColor(
+//                getContext(), R.color.Blue), PorterDuff.Mode.SRC_ATOP        ));
         dialog_spinner.setAdapter(data);
         builder.setView(dialog_spinner);
 

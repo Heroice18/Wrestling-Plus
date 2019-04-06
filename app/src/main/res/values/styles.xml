@@ -16,8 +16,14 @@
         <item name="android:textColor">@color/Blue</item>
         <item name="android:shape">rectangle</item>
     </style>
-    <style name="ButtonLayout" >
+    <style name="DialogBox" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:background">@color/Light_Blue</item>
+        <item name="android:textColor">@color/Black</item>
 
+    </style>
+    <style name="checkBoxCreate">
+        <item name="android:textColor">@color/Blue</item>
     </style>
 
 </resources>
