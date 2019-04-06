@@ -80,7 +80,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, totalTeam);
+                R.layout.spinner_cell, totalTeam);
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
         fresh = findViewById(R.id.freshman1);
         junior = findViewById(R.id.JV);
@@ -88,7 +88,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         newTeam.add("Default Player");
         teamLoad.setOnItemSelectedListener(this);
         //teamLoad.setAdapter(adapter);
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        data.setDropDownViewResource(R.layout.spinner_dropdown);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -218,7 +218,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
         teamLoad.setOnItemSelectedListener(this);
         //teamLoad.setAdapter(adapter);
-        data.setDropDownViewResource(R.layout.spinner_dropdown);
+        data.setDropDownViewResource(R.layout.spinner_cell);
 
         teamLoad.setAdapter(data);
         ListView listView = (ListView) findViewById(R.id.PlayerList);
