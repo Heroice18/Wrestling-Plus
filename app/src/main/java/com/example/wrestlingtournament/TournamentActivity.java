@@ -1,8 +1,11 @@
 package com.example.wrestlingtournament;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import static com.example.wrestlingtournament.App.CHANNEL_1_ID;
+
 /**
  * Displays the tournament information to the user.
  * When created, it populates the listView and textView with the tournament info from Firebase.
@@ -42,6 +47,7 @@ import java.util.Vector;
  */
 public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
+    private NotificationManagerCompat notificationManager;
   public static final String TAG = "TournamentActivity";
   FirebaseUser user;
   FirebaseAuth mAuth;
@@ -129,7 +135,27 @@ public class TournamentActivity extends AppCompatActivity {
     nextRoundBtn = (ImageButton) findViewById(R.id.nextRoundButton);
     lastRoundBtn = (ImageButton) findViewById(R.id.lastRoundButton);
     lastRoundBtn.setEnabled(false);
+
+
+
+      notificationManager = NotificationManagerCompat.from(this);
+
+
   }
+    public void sendOnChannel1(View v) {
+        String title = "Hey";
+        String message = "Message";
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
 
   /*
   private void setLevels() {

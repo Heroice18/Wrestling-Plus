@@ -8,7 +8,6 @@
         android:textSize="20sp"
         android:gravity="left"
 
-        android:divider="#000"
-        android:dividerHeight="2sp"
+
         android:padding="5dip"
          />
