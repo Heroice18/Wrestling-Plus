@@ -70,9 +70,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public String divisionName;
     public Map<String, Object> create = new HashMap<>();
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,12 +110,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                 grabPlayers();
             }
         });
-
-
-
-
-
-
     }
 
     public void grabPlayers(){
@@ -132,8 +123,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
         Log.d(TAG, "grabPlayers: tournamnet" + current_Tournament);
         Log.d(TAG, "grabPlayers: type" + type);
-        //Log.d(TAG, "grabPlayers: tournamnet" + current_Tournament);
-        //DocumentReference docRef = db.collection("tournaments").document("SF");
+
         db.collection("tournaments").document(current_Tournament).collection("addedPlayers")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -156,10 +146,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                 divisionName = value;
                             }
                             if(key.equals("name")) {
-                                //String value = entry.getValue().toString();
-//                                Log.d(TAG, "onComplete value: " + value);
-//                                Log.d(TAG, "onComplete: Entering if name");
-
                                 Log.d(TAG, "9onComplete: type this " + type);
                                 Log.d(TAG, "9onComplete: division this " + divisionName);
                                 if(divisionName.equals(type)) {
@@ -174,30 +160,13 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                     dataStore.put(passive, passiveID);
                                     divisionStore.put(passive, divisionName);
                                 }
-//                                Log.d(TAG, "onComplete: dataStore " + dataStore);
-//                                Log.d(TAG, "onComplete: divisionName " + divisionName);
-//                                Log.d(TAG, "onComplete: divisionStore " + divisionStore);
-
-
                             }
-                            if(key.equals("email")){
-
-
-                                //Log.d(TAG, "onComplete: data " + emailData);
-                            }
-                            //emailData.put(key, value);
-//                            Log.d(TAG, "onComplete: playerEmail " + emailData);
-//
-//                            Log.d(TAG, "onComplete passing: " + totalTournaments);
                         }
                     }
-                    //Log.d(TAG, "onComplete: tournament2 " + TournamentStore);
 
                     newTeam = populate;
                     ArrayAdapter adapter = new ArrayAdapter<String>(manageTournaments.this,
                             R.layout.activity_listview, newTeam);
-//                    Log.d(TAG, "onComplete: newTeam " + newTeam);
-//                    Log.d(TAG, "onComplete: populate " + populate);
 
                     ListView listView = (ListView) findViewById(R.id.PlayerList);
                     listView.setAdapter(adapter);
@@ -233,13 +202,8 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 //                        newTeam = populate;
 //                        updateActivity();
 //                    }
-                 else {
-                    //Log.d(TAG, "Error getting documents: ", task.getException());
-                }
             }
         });
-
-
     }
 
     /**
@@ -247,20 +211,19 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
      */
     public void updateActivity(){
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter adapter = new ArrayAdapter<>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, totalTournaments);
+                R.layout.spinner_cell, totalTournaments);
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
         teamLoad.setOnItemSelectedListener(this);
         //teamLoad.setAdapter(adapter);
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        data.setDropDownViewResource(R.layout.spinner_dropdown);
 
         teamLoad.setAdapter(data);
         ListView listView = (ListView) findViewById(R.id.PlayerList);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
     }
 
     /**
@@ -332,55 +295,15 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                Log.d(TAG, "onItemClick player: " + player);
                Log.d(TAG, "onItemClick: currentTournament " + current_Tournament);
                Log.d(TAG, "onItemClick: TournamnetStore " + TournamentStore);
-//               db.collection("user").document(currentUser.getEmail()).collection("tournaments")
-//                       .document(current_Tournament).collection("addedPlayers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                   @Override
-//                   public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                       if(task.isSuccessful()) {
-//                           Log.d(TAG, "3onComplete: ");
-//                           for (DocumentSnapshot document : task.getResult()) {
-//                               Log.d(TAG, "Here3 " + document.getId() + " => " + document.getData());
-//                           }
-//                       }
-//                       else {
-//                           Log.d(TAG, "Error getting documents: ", task.getException());
-//                       }
-//                   }
-//               });
-
-
-
-
-//               db.collection("tournaments").document(current_Tournament).collection("addedPlayers")
-//                       .whereEqualTo(currentUser.getEmail(), true).get()
-//                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                           @Override
-//                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                               if (task.isSuccessful()) {
-//                                   for (DocumentSnapshot document : task.getResult()) {
-//                                       Log.d(TAG, "Here " + document.getId() + " => " + document.getData());
-//                                   }
-//                               } else {
-//                                   Log.d(TAG, "Error getting documents: ", task.getException());
-//                               }
-//                           }
-//                       });
-
-
-
 
                 /*
                 Grabs the specific email
                  */
-
-
                for(HashMap.Entry<String, ArrayList<String>>entry : dataStore.entrySet()){
                             String key = entry.getKey();
                             Log.d(TAG, "onComplete key: " + key);
                             if(key.equals(playerData)) {
                                 email = entry.getValue().toString().replace("[", "").replace("]", "");
-//                                email.replaceAll("\\[|\\]", "");
-//                                email.replace("]","");
                                 Log.d(TAG, "3onComplete value: " + email);
                                 Log.d(TAG, "3onComplete: key " + key);
                                 //populate.add(value);
@@ -389,25 +312,17 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                             Log.d(TAG, "onComplete passing: " + totalTournaments);
                         }
 
-
-
-
-
-
-
-
-
                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
                builder.setTitle("Submit wrestler's weight:");
                builder.setIcon(R.drawable.wplus);
 
-// Set up the input
+                // Set up the input
                final EditText input = new EditText(manageTournaments.this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                input.setInputType(InputType.TYPE_CLASS_NUMBER);
                builder.setView(input);
 
-// Set up the buttons
+                // Set up the buttons
                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -439,10 +354,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                        create.put("name", playerData);
                        create.put("weight", weight);
 
-                           /*
-                           Set up the weight and apply it to the user
-                            */
-
+                       /*
+                       Set up the weight and apply it to the user
+                        */
                        db.collection("tournaments").document(/*current_Tournament*/current_Tournament).collection("addedPlayers").
                                document(email).set(playerStat, SetOptions.mergeFields("weight"))
                                .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -462,9 +376,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                    DocumentSnapshot document = task.getResult();
                                                    if (document != null) {
                                                        Log.d(TAG, "onComplete4: " + type);
-                                               /*
-                                               Fix here gotothis - Done
-                                                */
+                                                       /*
+                                                       Fix here gotothis - Done
+                                                        */
                                                        db.collection("tournaments").document(current_Tournament).collection("divisions")
                                                                .document(type).collection("wrestlers").document(email).set(create, SetOptions.merge()).
                                                                addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -484,9 +398,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                Log.d(TAG, "onFailure: Failed");
                                            }
                                        });
-                /*
-                Updates the ListView
-                 */
+                                        /*
+                                        Updates the ListView
+                                         */
                                        ArrayAdapter<String> array = new ArrayAdapter<String>(manageTournaments.this,
                                                android.R.layout.simple_list_item_1, newTeam);
                                        ListView part = (ListView) findViewById(R.id.PlayerList);
@@ -500,17 +414,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
-//                       db.collection("tournaments").document("testing").collection("divisions").
-//                               document(type).collection("addedPlayersDebug").document("This is Here").update("confirmed", false);
-//                       //newTeam.add(m_Text);
                        dialog.cancel();
                    }
                });
 
                builder.show();
-
-
-
            }
        });
         grabPlayers();
@@ -577,7 +485,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                         });
                             }
                         });
-
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -799,7 +706,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                 }
                             }
                         });
-
+                Toast.makeText(getApplicationContext(), "All weighed in players have been added to brackets.", Toast.LENGTH_LONG).show();
             }
         });
         builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {

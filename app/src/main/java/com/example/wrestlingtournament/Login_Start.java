@@ -1,25 +1,16 @@
 package com.example.wrestlingtournament;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,7 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -167,43 +157,6 @@ public class Login_Start extends AppCompatActivity{
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSuccess: added user");
 
-                                    if (type.equals("Admin")) {
-                                        Map<String, Object> exampleTournament = new HashMap<>();
-                                        exampleTournament.put("name", "Example Tournament");
-                                        exampleTournament.put("adminEmail", String.valueOf(email));
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("tournaments").document("RexFight2019")
-                                                .set(exampleTournament);
-                                    }
-
-                                    if (type.equals("Wrestler")) {
-                                        Map<String, Object> exampleTournament = new HashMap<>();
-                                        exampleTournament.put("name", "Example Tournament");
-                                        db.collection("user").document(String.valueOf(email))
-                                                .collection("tournaments").document("RexFight2019")
-                                                .set(exampleTournament);
-                                    }
-
-//                                    if (type.equals("Coach")) {
-//                                        Map<String, Object> exampleTournament = new HashMap<>();
-//                                        exampleTournament.put("name", "Example Tournament");
-//                                        db.collection("user").document(String.valueOf(email))
-//                                                .collection("tournaments").document("RexFight2019")
-//                                                .set(exampleTournament);
-//
-//                                        Map<String, Object> teamsExist = new HashMap<>();
-//                                        teamsExist.put("exists", true);
-//                                        db.collection("user").document(String.valueOf(email))
-//                                                .collection("teams").document("varsity")
-//                                                .set(teamsExist);
-//                                        db.collection("user").document(String.valueOf(email))
-//                                                .collection("teams").document("juniorvarsity")
-//                                                .set(teamsExist);
-//                                        db.collection("user").document(String.valueOf(email))
-//                                                .collection("teams").document("freshman")
-//                                                .set(teamsExist);
-//                                    }
-
                                     //go to sign in page
                                     returnBack(view);
                                 }
@@ -220,7 +173,6 @@ public class Login_Start extends AppCompatActivity{
                 }
             }
         });
-
     }
 
     public void logInUser(View b)
@@ -384,32 +336,4 @@ public class Login_Start extends AppCompatActivity{
         //Button back = (Button) findViewById(R.id.goBack);
 
     }
-
-    /* Junk and Test Data
-    //popUp();
-        //test.login();
-        /*LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
-
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
-        // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
-        popupWindow.showAtLocation(c, Gravity.CENTER, 0, 0);
-
-        // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
-        });*/
-
-
 }

@@ -1,7 +1,10 @@
 package com.example.wrestlingtournament;
 
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,12 +38,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.view.View.VISIBLE;
+import static java.security.AccessController.getContext;
 
 /**
  * This Activity holds everything we need for the activity_team_manage.xml including creation,
@@ -147,16 +153,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
         ListView listView = (ListView) findViewById(R.id.team_list);
         listView.setAdapter(adapter);
-        //Test Values
-
-        /*totalTeam.add("2");
-        totalTeam.add("3");*/
-        //This takes care of the dropdown menu
-
-
-
-        //ListView list = (ListView) findViewById(R.id.team_list);
-        //list.setAdapter(adapt);
     }
 
     /**
@@ -183,8 +179,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
             }
         });
 
-        //String test = "Add This";
-        //newTeam.add(test);
         updateTeam();
     }
 
@@ -195,8 +189,16 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      */
     public void confirmAdd(View c)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Submit wrestler's email:");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
+//        TextView title = null;
+//        title.setText("Submit Wrestler's Email");
+//        title.setTypeface(null, Typeface.BOLD);
+        String total = "Submit Wrestler's Email";
+
+
+        builder.setTitle(R.string.submit_wrestler);
+
+        builder.setIcon(R.drawable.wplus);
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -245,8 +247,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                         Toast.makeText(teamManage.this, "Error finding wrestler", Toast.LENGTH_SHORT).show();
                     }
                 });
-                //adds the input to the list
-                //newTeam.add(m_Text);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -264,10 +264,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      * Grab players in selected team and add to listview
      */
     public void updateList(){
-        //newWrestler
-        //ArrayList passAlong = new ArrayList();
-        //passAlong.addAll(newWrestler.entrySet());
-        //newTeam = passAlong;
         for(Map.Entry<String,Object> entry : teamMap.entrySet()){
             String key = entry.getValue().toString();
             newTeam.add(key);
@@ -280,16 +276,19 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
      */
     public void addTeamToTournament(View view) {
         final Spinner teamLoad = findViewById(R.id.spinner);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Submit this team to tournament:");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
+        builder.setTitle(R.string.submit_team);
+        builder.setIcon(R.drawable.wplus);
 
         // Set up the input
         final Spinner dialog_spinner = new Spinner(this);
         // Specify the type of input expected
         ArrayAdapter<String> data = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, coachesTournaments);
+                R.layout.spinner_cell, coachesTournaments);
         dialog_spinner.getOnItemSelectedListener();
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        data.setDropDownViewResource(R.layout.spinner_dropdown);
+//        dialog_spinner.getBackground().setColorFilter(ContextCompat.getColor(
+//                getContext(), R.color.Blue), PorterDuff.Mode.SRC_ATOP        ));
         dialog_spinner.setAdapter(data);
         builder.setView(dialog_spinner);
 
@@ -314,9 +313,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                     db.collection("user").document(entry.getKey())
                             .collection("tournaments").document(dialogSpinnerText)
                             .set(tournamentName);
+                    Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
+                            + " was added to the " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
                 }
-
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -360,6 +359,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
     /**
      * This Takes away from the list
+     * Currently not in use.
      */
     public void subtractWrestler(View w){
 
@@ -391,13 +391,8 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
                             loc = num;
                        }
-
                    }
-
-
                 newTeam.remove(loc);
-
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -409,13 +404,12 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
         builder.show();
 
-
         String test = "Add This";
         newTeam.remove(test);
         updateTeam();
     }
 
-    /* // This code is being reserved for stretch goals where coaches can add custom teams.
+     // This code is being reserved for stretch goals where coaches can add custom teams.
     public void addTeams(View t){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please Name Your New Team");
@@ -456,28 +450,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         builder.show();
-
-
-    }
-    */
-
-    public void testMaps(View q){
-        Object V = new Object() ;
-        Object b = new Object() ;
-        Object n = new Object() ;
-        Object m = new Object() ;
-        test.put("Hey", V);
-        test.put("There", b);
-        test.put("I'm", n);
-        test.put("Brandon", m);
-        ArrayList data = new ArrayList();
-        for(Map.Entry<String,Object> entry : test.entrySet()){
-          String key = entry.getKey();
-          newTeam.add(key);
-        }
-        //data.addAll(test.entrySet());
-        //newTeam = data;
-        updateTeam();
     }
 
     /*
@@ -496,66 +468,4 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
 }
-//Junk Code
-
-       /* LayoutInflater inflated = (LayoutInflater)
-                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        PopupWindow window = new PopupWindow(inflated.inflate(R.layout.popup_window, null, false),
-                100,100,true);
-        window.showAtLocation(this.findViewById(R.id.addPlayer),
-                Gravity.CENTER,0,0);*/
-       /* public ArrayList<String> TeamA = new ArrayList<>();
-    String[] tester = new String[]{};
-    List<String> teams = new ArrayList<String>(Arrays.asList(tester));
-    ArrayAdapter<String> adapt = new ArrayAdapter<String>(this,
-            R.layout.activity_team_manage, teams);
-    ListView list = (ListView) findViewById(R.id.team_list);*/
-
-
-       /*  AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
-
-// Set up the input
-        final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
-
-// Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                m_Text = input.getText().toString();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();*/
-
-
-        /*LayoutInflater inflater = (LayoutInflater) teamManage.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.popup_window,
-                (ViewGroup) teamManage.this.findViewById(R.id.popup_element));
-        Button confirm = (Button)findViewById(R.id.addConfirm);
-        LayoutInflater factory = getLayoutInflater();
-        View regis = factory.inflate(R.layout.popup_window, null);
-        EditText user = (EditText) regis.findViewById(R.id.playerDetails);
-        String total = user.getText().toString();
-        System.out.println(total);
-        newTeam.add(total);
-//        EditText player = (EditText)findViewById(R.id.playerDetails);
-
-        //System.out.println( " *value is: " + player);
-        //String content = player.getText().toString();
-        //System.out.println(content);
-        //String name = player.getText().toString();
-        //System.out.println(name);
-        //newTeam.add(name);*/

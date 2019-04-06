@@ -4,16 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".teamManage">
+    tools:context=".teamManage"
+    android:background="@color/Light_Blue">
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="354dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@color/Blue"
+        android:fontFamily=""
+        android:gravity="center"
+        android:paddingLeft="2dp"
+        android:paddingTop="5dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="5dp"
         android:text="This is Your Team and Players"
+        android:textAlignment="center"
+        android:textColor="#f2f2f2"
+        android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,6 +39,7 @@
         android:layout_marginEnd="32dp"
         android:onClick="confirmAdd"
         android:text="Add Player"
+        android:background="@drawable/button_style"
         app:layout_constraintEnd_toStartOf="@+id/add_to_tournament"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,19 +47,24 @@
 
     <Button
         android:id="@+id/add_to_tournament"
+        android:background="@drawable/button_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:onClick="addTeamToTournament"
         android:text="Submit team"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <ListView
         android:id="@+id/team_list"
+        android:background="@drawable/tournament_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:divider="#000"
+        android:dividerHeight="2sp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
@@ -111,7 +129,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/drop_shadow"
+        android:background="@drawable/spinner_layout"
+        android:textAlignment="center"
+
+        android:popupBackground="@drawable/popup_background_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addPlayer" />

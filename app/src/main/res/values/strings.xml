@@ -40,4 +40,8 @@
         <item>> 285</item>
     </string-array>
 
+    <string name="submit_wrestler"><b>Submit Wrestler\'s Email</b></string>
+
+    <string name="submit_team"><b>Submit This Team To Tournament:</b></string>
+
 </resources>
