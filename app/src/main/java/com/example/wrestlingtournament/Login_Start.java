@@ -149,6 +149,7 @@ public class Login_Start extends AppCompatActivity{
                     user.put("lastName", lastName);
                     user.put("email", email.toLowerCase());
                     user.put("userType", type);
+                    user.put("ready", false);
 
                     db.collection("user").document(String.valueOf(email))
                             .set(user)

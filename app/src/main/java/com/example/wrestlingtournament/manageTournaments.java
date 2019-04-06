@@ -80,33 +80,19 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, totalTeam);
-
+                R.layout.spinner_cell, totalTeam);
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
         fresh = findViewById(R.id.freshman1);
         junior = findViewById(R.id.JV);
         varsity = findViewById(R.id.Varsity);
         newTeam.add("Default Player");
-        teamLoad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Log.d(TAG, "onItemSelected: entering in here 1");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                Log.d(TAG, "onItemSelected: entering in here 2");
-            }
-
-        });
-
-        teamLoad.setAdapter(adapter);
+        teamLoad.setOnItemSelectedListener(this);
+        //teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(R.layout.spinner_dropdown);
-        teamLoad.setAdapter(data);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
+        teamLoad.setAdapter(data);
         updateSelection();
         updateonClick();
         //grabPlayers();
@@ -225,9 +211,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
      */
     public void updateActivity(){
 
-        /*
-        Notes: Possible final?
-         */
         ArrayAdapter adapter = new ArrayAdapter<>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
@@ -235,7 +218,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         Spinner teamLoad = (Spinner) findViewById(R.id.TournamentSpin);
         teamLoad.setOnItemSelectedListener(this);
         //teamLoad.setAdapter(adapter);
-        data.setDropDownViewResource(R.layout.spinner_dropdown);
+        data.setDropDownViewResource(R.layout.spinner_cell);
 
         teamLoad.setAdapter(data);
         ListView listView = (ListView) findViewById(R.id.PlayerList);

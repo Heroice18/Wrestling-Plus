@@ -2,6 +2,7 @@ package com.example.wrestlingtournament;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MatchActivity extends AppCompatActivity {
     public static final String TAG = "MatchActivity";
@@ -73,8 +81,23 @@ public class MatchActivity extends AppCompatActivity {
           builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
                   // User clicked OK button
-                  Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();
-                  MatchActivity.this.finish();
+                  db.document(tournamentRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                      @Override
+                      public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                          int currentCount = task.getResult().getLong("currentWrestlerCount").intValue();
+                          int newCount = currentCount + 1;
+                          Log.d(TAG, "onComplete: current wrester count - " + currentCount);
+
+                          //update the winner to be passed on to the next round
+                          Map<String, Object> winner = new HashMap<>();
+                          winner.put("name", player1name);
+                          winner.put("email", player1email);
+                          db.document(tournamentRef).collection("wrestlers").document(String.valueOf(newCount)).set(winner);
+                          db.document(tournamentRef).update("currentWrestlerCount", newCount);
+                          Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();
+                          MatchActivity.this.finish();
+                      }
+                  });
               }
           });
           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -95,8 +118,23 @@ public class MatchActivity extends AppCompatActivity {
           builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
                   // User clicked OK button
-                  Toast.makeText(MatchActivity.this, "Congratulations! " + player2name + " is the winner!", Toast.LENGTH_LONG).show();
-                  MatchActivity.this.finish();
+                  db.document(tournamentRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                      @Override
+                      public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                          int currentCount = task.getResult().getLong("currentWrestlerCount").intValue();
+                          int newCount = currentCount + 1;
+                          Log.d(TAG, "onComplete: current wrester count - " + currentCount);
+
+                          //update the winner to be passed on to the next round
+                          Map<String, Object> winner = new HashMap<>();
+                          winner.put("name", player2name);
+                          winner.put("email", player2email);
+                          db.document(tournamentRef).collection("wrestlers").document(String.valueOf(newCount)).set(winner);
+                          db.document(tournamentRef).update("currentWrestlerCount", newCount);
+                          Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();
+                          MatchActivity.this.finish();
+                      }
+                  });
               }
           });
           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
