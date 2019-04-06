@@ -2,13 +2,8 @@ package com.example.wrestlingtournament;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,14 +17,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +30,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.example.wrestlingtournament.Login_Start.location;
 
-//Hey Lets DO THIS THING
-//Howdy^ /-|-\
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
@@ -200,8 +192,6 @@ public class MainActivity extends AppCompatActivity {
         list.setVisibility(VISIBLE);
         TextView tournamentA = findViewById(R.id.textViewAdmin);
         tournamentA.setVisibility(GONE);
-
-
     }
 
     public void displayWrestler()
@@ -238,14 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       /* switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);*/
        return true;
-
     }
 
     //log out of account

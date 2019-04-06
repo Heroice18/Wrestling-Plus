@@ -26,9 +26,6 @@ public class MatchActivity extends AppCompatActivity {
     TextView player2Score;
     String tournamentRef;
 
-
-
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
