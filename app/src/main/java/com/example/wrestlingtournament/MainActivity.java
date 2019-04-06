@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Intent send;
     ArrayList<String> totalTournaments = new ArrayList<String>();
     public Map<String, Object> TournamentStore = new HashMap<>();
+    public Map<String, Object> tournamentNameIdMap = new HashMap<>();
     ArrayAdapter<String> myAdapter;
     public static final String TAG = "MainActivity";
     public String emailName;
@@ -90,10 +92,14 @@ public class MainActivity extends AppCompatActivity {
                 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, "Current document: " + document);
-                    
+
+                        tournamentNameIdMap.put(document.get("name").toString(), document.getId());
                         TournamentStore = document.getData();
-                    
+                        String tournamentId = document.getId();
+
+                        Log.d(TAG, "onComplete: tournamentID = " + tournamentId);
                         Log.d(TAG, "Storage: " + TournamentStore);
+                        Log.d(TAG, "onComplete: tournament store key = ");
                     
                         for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
                             String key = entry.getKey();
@@ -118,9 +124,12 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String itemValue = (String) tournamentList.getItemAtPosition(position);
-            
-                send.putExtra("tournamentName", itemValue);
+                String tournamentName = (String) tournamentList.getItemAtPosition(position);
+                String tournamentCode = (String)tournamentNameIdMap.get(tournamentName);
+                Log.d(TAG, "onItemClick: tournament name" + tournamentName);
+                Log.d(TAG, "onItemClick: tournament code: " + tournamentCode);
+                send.putExtra("tournamentName", tournamentName);
+                send.putExtra("tournamentCode", tournamentCode);
                 startActivity(send);
             }
         };

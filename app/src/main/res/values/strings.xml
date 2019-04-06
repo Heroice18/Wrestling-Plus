@@ -9,6 +9,11 @@
         <item>Junior Varsity</item>
         <item>Freshman</item>
     </string-array>
+    <string-array name="tournamentViewLevelSelection">
+        <item>varsity</item>
+        <item>juniorvarsity</item>
+        <item>freshman</item>
+    </string-array>
     <color name="Blue">#3D6DCD</color>
     <color name="Light_Blue">#9FDDD8</color>
     <color name="Teal">#B4CBCA</color>
@@ -19,19 +24,19 @@
 
     <string-array name="weightClass">
         <item>&lt; 106</item>
-        <item>107–113</item>
-        <item>114–120</item>
-        <item>121–126</item>
-        <item>127–132</item>
-        <item>133–138</item>
-        <item>139–145</item>
-        <item>146–152</item>
-        <item>153–160</item>
-        <item>161–170</item>
-        <item>171–182</item>
-        <item>183–195</item>
-        <item>196–220</item>
-        <item>221–285</item>
+        <item>107-113</item>
+        <item>114-120</item>
+        <item>121-126</item>
+        <item>127-132</item>
+        <item>133-138</item>
+        <item>139-145</item>
+        <item>146-152</item>
+        <item>153-160</item>
+        <item>161-170</item>
+        <item>171-182</item>
+        <item>183-195</item>
+        <item>196-220</item>
+        <item>221-285</item>
         <item>> 285</item>
     </string-array>
 

@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/player1Name"
-        android:layout_width="169dp"
+        android:layout_width="360dp"
         android:layout_height="41dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/player2Name"
-        android:layout_width="161dp"
+        android:layout_width="337dp"
         android:layout_height="43dp"
         android:layout_marginEnd="16dp"
         android:text="Player 2"

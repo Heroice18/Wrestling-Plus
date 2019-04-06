@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,14 @@ public class TournamentActivity extends AppCompatActivity {
   FirebaseUser user;
   FirebaseAuth mAuth;
   String tournamentName;
+  String tournamentCode;
   String tournamentRef;
+
+  Spinner divisionSpinner;
+  Spinner weighClassSpinner;
+
+  String division;
+  String weightClass;
   int round;
 
   ArrayAdapter<String> myAdapter;
@@ -53,7 +61,11 @@ public class TournamentActivity extends AppCompatActivity {
   public Map<String, String> playerMap = new HashMap<>();
   ImageButton nextRoundBtn;
   ImageButton lastRoundBtn;
-  
+
+  //these are so we don't call spinner listeners when we first create the page
+  boolean isDivisionCreated = false;
+  boolean isWeightClassCreated = false;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -61,23 +73,92 @@ public class TournamentActivity extends AppCompatActivity {
     db = FirebaseFirestore.getInstance();
     mAuth = FirebaseAuth.getInstance();
     user = mAuth.getCurrentUser();
-    tournamentRef = "/tournaments/fc2019/divisions/freshman/test";
+    tournamentCode = getIntent().getStringExtra("tournamentCode");
+
+    //setLevels();
+
+
+    divisionSpinner = (Spinner) findViewById(R.id.level);
+    weighClassSpinner = (Spinner) findViewById(R.id.weightClass);
+    division = divisionSpinner.getSelectedItem().toString();
+    weightClass = weighClassSpinner.getSelectedItem().toString();
+
+    //we need to create a listener to update the list when a new division is selected
+    divisionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if (isDivisionCreated) {
+                division = divisionSpinner.getItemAtPosition(i).toString();
+                Log.d(TAG, "onItemSelected: new division selected is: " + division);
+                tournamentRef = "/tournaments/" + tournamentCode + "/divisions/" + division + "/brackets/" + weightClass + "/wrestlers";
+                Log.d(TAG, "onItemSelected: about to update the tournament list");
+                setMatchList();
+            }
+            else {
+                isDivisionCreated = true;
+            }
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    });
+    weighClassSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if (isWeightClassCreated) {
+                weightClass = weighClassSpinner.getItemAtPosition(i).toString();
+                tournamentRef = "/tournaments/" + tournamentCode + "/divisions/" + division + "/brackets/" + weightClass + "/wrestlers";
+                Log.d(TAG, "onItemSelected: the weight was changed. Updating the list view");
+                Log.d(TAG, "onItemSelected: new weigth is " + weightClass);
+                setMatchList();
+            }
+            else {
+                isWeightClassCreated = true;
+            }
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    });
+
+    tournamentRef = "/tournaments/" + tournamentCode + "/divisions/" + division + "/brackets/" + weightClass + "/wrestlers";
     setTournamentName();
+
     round = 1;
     setMatchList();
-
     nextRoundBtn = (ImageButton) findViewById(R.id.nextRoundButton);
     lastRoundBtn = (ImageButton) findViewById(R.id.lastRoundButton);
     lastRoundBtn.setEnabled(false);
   }
-  
+
+  /*
+  private void setLevels() {
+     String dbRef = "/tournaments/" + tournamentCode + "/divisions";
+      Log.d(TAG, "setLevels: filling in level list with path: " + dbRef);
+     db.collection(dbRef).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+         @Override
+         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+             if (task.isSuccessful()) {
+                 ArrayList<String> levels = new ArrayList<String>();
+                 for (QueryDocumentSnapshot document : task.getResult()) {
+                     levels.add(document.getId());
+                     Log.d(TAG, document.getId() + " => " + document.getData());
+                 }
+                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(TournamentActivity.this, android.R.layout.simple_spinner_item, levels);
+                 divisionSpinner.setAdapter(adapter);
+             }
+         }
+     });
+  }*/
+
   private void setMatchList() {
 
-    matchList = findViewById(R.id.matchList);
-    final String[] players;
-    myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-    db.collection("tournaments").document("fc2019").collection("divisions")
-            .document("freshman").collection("test").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+      matchList = findViewById(R.id.matchList);
+      final String[] players;
+      myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+      Log.d(TAG, "setMatchList: match list being set with path to : " + tournamentRef);
+      db.collection(tournamentRef).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
           @Override
           public void onComplete(@NonNull Task<QuerySnapshot> task) {
             Vector<String> players = new Vector<String>();
@@ -141,7 +222,7 @@ public class TournamentActivity extends AppCompatActivity {
   
     matchList.setOnItemClickListener(listClick);
   }
-  
+
   private void setTournamentName() {
     tournamentName = getIntent().getStringExtra("tournamentName");
     
