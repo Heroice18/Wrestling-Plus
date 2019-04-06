@@ -709,6 +709,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                                 wrestlerMap.put("name", name);
                                                                 wrestlerMap.put("weight", weight);
                                                                 wrestlerMap.put("winCount", 0);
+                                                                wrestlerMap.put("id", Integer.toString(count));
                                                                 db.collection("tournaments").document(current_Tournament)
                                                                         .collection("divisions").document(document.getId())
                                                                         .collection("brackets").document(bracket)
@@ -719,7 +720,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                                                     }
                                                 });
                                     }
-
                                 }
                             }
                         });

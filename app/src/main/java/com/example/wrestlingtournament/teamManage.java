@@ -297,25 +297,44 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialogSpinnerText = dialog_spinner.getSelectedItem().toString();
+                final List<String> divisionsAvailable = new ArrayList<>();
 
-                Map<String, Object> tournamentName = new HashMap<>();
-                tournamentName.put("code", dialogSpinnerText);
-                //tournamentName.put("name", db.collection("user"));
+                db.collection("tournaments").document(dialogSpinnerText)
+                        .collection("divisions").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful() & task.getResult() != null) {
+                                    for (final QueryDocumentSnapshot document : task.getResult()) {
+                                        divisionsAvailable.add(document.getId().toLowerCase());
+                                    }
 
-                for(Map.Entry<String,Object> entry : teamMap.entrySet()){
-                    Map<String, Object> playerName = new HashMap<>();
-                    playerName.put("name", entry.getValue().toString());
-                    playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
+                                    if(divisionsAvailable.contains(teamLoad.getSelectedItem().toString().toLowerCase())) {
+                                        Map<String, Object> tournamentName = new HashMap<>();
+                                        tournamentName.put("code", dialogSpinnerText);
+                                        //tournamentName.put("name", db.collection("user"));
 
-                    db.collection("tournaments").document(dialogSpinnerText)
-                            .collection("addedPlayers").document(entry.getKey())
-                            .set(playerName, SetOptions.merge());
-                    db.collection("user").document(entry.getKey())
-                            .collection("tournaments").document(dialogSpinnerText)
-                            .set(tournamentName);
-                    Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
-                            + " was added to the " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
-                }
+                                        for(Map.Entry<String,Object> entry : teamMap.entrySet()){
+                                            Map<String, Object> playerName = new HashMap<>();
+                                            playerName.put("name", entry.getValue().toString());
+                                            playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
+
+                                            db.collection("tournaments").document(dialogSpinnerText)
+                                                    .collection("addedPlayers").document(entry.getKey())
+                                                    .set(playerName, SetOptions.merge());
+                                            db.collection("user").document(entry.getKey())
+                                                    .collection("tournaments").document(dialogSpinnerText)
+                                                    .set(tournamentName);
+                                            Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
+                                                    + " was added to the " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
+                                                + " cannot participate in " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        });
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -417,9 +436,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         // Set up the input
         final Spinner input = new Spinner(this);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        ArrayAdapter<String> data = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> data = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, DivisionNames.names());
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter adapter = new ArrayAdapter<>(this,
                 R.layout.activity_listview, newTeam);
         input.setOnItemSelectedListener(this);
         input.setAdapter(adapter);
