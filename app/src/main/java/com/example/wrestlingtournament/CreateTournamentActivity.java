@@ -65,11 +65,11 @@ public class CreateTournamentActivity extends AppCompatActivity {
         final String adminEmail = user.getEmail();
 
         //check to make sure form is filled out appropriately
-        if (tName == "") {
+        if (tName.equals("")) {
             tournamentNameText.setError("Please enter a name");
             return;
         }
-        if (tName == "") {
+        if (tCode.equals("")) {
             tournamentCodeText.setError("Please enter tournament code");
             return;
         }
