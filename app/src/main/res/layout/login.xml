@@ -101,19 +101,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.292" />
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
 
-        android:layout_marginEnd="8dp"
-        android:onClick="logButton"
-        android:text="Login"
-        app:layout_constraintBaseline_toBaselineOf="@+id/Create"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/Admin"
@@ -176,6 +164,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="Create"
         android:text="Create"
+        android:background="@drawable/button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -194,6 +183,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="signUpUser"
         android:text="Create Profile"
+        android:background="@drawable/button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -211,6 +201,8 @@
         android:layout_marginBottom="8dp"
         android:onClick="returnBack"
         android:text="Back"
+        android:textColor="@color/Blue"
+        android:background="@drawable/negative_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -228,6 +220,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="logInUser"
         android:text="Login"
+        android:background="@drawable/button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

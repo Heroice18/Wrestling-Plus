@@ -338,10 +338,10 @@ public class Login_Start extends AppCompatActivity{
         coachButton.setVisibility(VISIBLE);
         RadioButton playerButton = findViewById(R.id.wrestler);
         playerButton.setVisibility(VISIBLE);
-        Button log = (Button) findViewById(R.id.login);
-        log.setVisibility(GONE);
-        Button in = (Button) findViewById(R.id.login);
-        in.setVisibility(GONE);
+//        Button log = (Button) findViewById(R.id.login);
+//        log.setVisibility(GONE);
+//        Button in = (Button) findViewById(R.id.login);
+//        in.setVisibility(GONE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(GONE);
         Button login = (Button) findViewById(R.id.logButton);
@@ -373,10 +373,10 @@ public class Login_Start extends AppCompatActivity{
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);
 
-        Button log = (Button) findViewById(R.id.login);
-        log.setVisibility(VISIBLE);
-        Button in = (Button) findViewById(R.id.login);
-        in.setVisibility(VISIBLE);
+//        Button log = (Button) findViewById(R.id.login);
+//        log.setVisibility(VISIBLE);
+//        Button in = (Button) findViewById(R.id.login);
+//        in.setVisibility(VISIBLE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(VISIBLE);
         Button login = (Button) findViewById(R.id.logButton);

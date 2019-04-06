@@ -10,5 +10,14 @@
     <style name="Login_Button" parent="ThemeOverlay.AppCompat">
         <item name="android:color">@color/Orange</item>
     </style>
+    <style name="TournamentListView" parent="@android:style/Widget.ListView">
+        <item name="android:background">@color/Orange</item>
+        <item name="android:divider">@color/Black</item>
+        <item name="android:textColor">@color/Blue</item>
+        <item name="android:shape">rectangle</item>
+    </style>
+    <style name="ButtonLayout" >
+
+    </style>
 
 </resources>

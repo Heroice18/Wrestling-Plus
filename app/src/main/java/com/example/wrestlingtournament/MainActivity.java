@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.example.wrestlingtournament.Login_Start.location;
 
 //Hey Lets DO THIS THING
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     public Map<String, Object> TournamentStore = new HashMap<>();
     ArrayAdapter<String> myAdapter;
     public static final String TAG = "MainActivity";
+    public String emailName;
+    public TextView display;
    // private DrawerLayout drawerLayout;
 
     @Override
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     
-        myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, totalTournaments);
+        myAdapter = new ArrayAdapter<>(this, R.layout.activity_listview , totalTournaments);
         
         AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
             @Override
@@ -131,7 +135,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Intent soda = new Intent();
         //String check = soda.getStringExtra(location);
-        TextView display = findViewById(R.id.textView5);
+        display = findViewById(R.id.textView5);
+
+
+        db.collection("user").document(currentUser.getEmail()).
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    Log.d(TAG, "onComplete: document " + document);
+                    emailName = document.getString("firstName");
+                    emailName = emailName + "'s Account";
+                    display.setText(emailName);
+
+
+                    }
+                    Log.d(TAG, "onComplete: of this: " + emailName);
+                }
+            });
+//        });
 
         switch (check){
             case "Admin":
@@ -149,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         System.out.println("      HEY " + check);
-        display.setText(check);
+        Log.d(TAG, "setUp: name " + emailName);
+
     }
 
     public void displayAdmin()
@@ -162,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
         team.setVisibility(GONE);
         TextView title = findViewById(R.id.textView2);
         title.setVisibility(GONE);
+        TextView tournamentC = findViewById(R.id.textViewCoach);
+        tournamentC.setVisibility(GONE);
     }
 
     public void displayCoach()
@@ -171,7 +197,10 @@ public class MainActivity extends AppCompatActivity {
         Button god = (Button) findViewById(R.id.CreateT);
         god.setVisibility(GONE);
         ListView list = findViewById(R.id.tournamentList);
-        list.setVisibility(GONE);
+        list.setVisibility(VISIBLE);
+        TextView tournamentA = findViewById(R.id.textViewAdmin);
+        tournamentA.setVisibility(GONE);
+
 
     }
 
@@ -186,7 +215,9 @@ public class MainActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.textView2);
         title.setVisibility(GONE);
         ListView list = findViewById(R.id.tournamentList);
-        list.setVisibility(GONE);
+        list.setVisibility(VISIBLE);
+        TextView tournamentA = findViewById(R.id.textViewAdmin);
+        tournamentA.setVisibility(GONE);
     }
     
     public void beginTeam(View s) {
