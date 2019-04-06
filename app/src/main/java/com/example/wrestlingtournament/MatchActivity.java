@@ -1,15 +1,21 @@
 package com.example.wrestlingtournament;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MatchActivity extends AppCompatActivity {
     public static final String TAG = "MatchActivity";
+    FirebaseFirestore db;
     String player1name;
     String player1email;
     String player2name;
@@ -18,6 +24,8 @@ public class MatchActivity extends AppCompatActivity {
     TextView player2Text;
     TextView player1Score;
     TextView player2Score;
+    String tournamentRef;
+
 
 
 
@@ -30,6 +38,8 @@ public class MatchActivity extends AppCompatActivity {
       player1email = getIntent().getStringExtra("player1email");
       player2name = getIntent().getStringExtra("player2name");
       player2email = getIntent().getStringExtra("player2email");
+      tournamentRef = getIntent().getStringExtra("tournamentPath");
+      Log.d(TAG, "onCreate: tournament path is: " + tournamentRef);
       Log.d(TAG, "onCreate: player 1 name and email is: " + player1name + " - " + player1email);
       Log.d(TAG, "onCreate: player 1 name and email is: " + player2name + " - " + player2email);
       player1Text = findViewById(R.id.player1Name);
@@ -39,13 +49,22 @@ public class MatchActivity extends AppCompatActivity {
 
       player1Score = findViewById(R.id.score1);
       player2Score = findViewById(R.id.score2);
+
+      db = FirebaseFirestore.getInstance();
   }
 
   public void submitScore(View view) {
 
+      //make sure scores have been entered
+      if(player1Score.getText().toString().isEmpty() || player2Score.getText().toString().isEmpty()) {
+          Toast.makeText(this, "Please enter valid scores before submitting results", Toast.LENGTH_LONG).show();
+          return;
+      }
+
       int score1 = Integer.parseInt(player1Score.getText().toString());
       int score2 = Integer.parseInt(player2Score.getText().toString());
 
+      Log.d(TAG, "submitScore: score 1 - score 2: " + score1 + " - " + score2);
       if (score1 > score2) {
           Log.d(TAG, "submitScore: wrestler1 wins");
           AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this);
@@ -57,6 +76,8 @@ public class MatchActivity extends AppCompatActivity {
           builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
                   // User clicked OK button
+                  Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();
+                  MatchActivity.this.finish();
               }
           });
           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -77,6 +98,8 @@ public class MatchActivity extends AppCompatActivity {
           builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
                   // User clicked OK button
+                  Toast.makeText(MatchActivity.this, "Congratulations! " + player2name + " is the winner!", Toast.LENGTH_LONG).show();
+                  MatchActivity.this.finish();
               }
           });
           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -98,5 +121,4 @@ public class MatchActivity extends AppCompatActivity {
           builder.show();
       }
   }
-
 }
