@@ -46,36 +46,30 @@ public class MatchActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_match);
 
+      mAuth = FirebaseAuth.getInstance();
     //Removes the buttons and score adders for players and coaches
       currentUser = mAuth.getCurrentUser();
-      currentUser.getEmail();
-      db.collection("user").document(currentUser.getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-          @Override
-          public void onSuccess(DocumentSnapshot documentSnapshot) {
-              String setUp = documentSnapshot.get("Usertype").toString();
-              if (setUp.equals("Wrestler")){
-                  Button ready = (Button) findViewById(R.id.match_ready);
-                  ready.setVisibility(View.GONE);
-                  Button Submit = (Button) findViewById(R.id.submitScoreButton);
-                  Submit.setVisibility(View.GONE);
-                  EditText one = findViewById(R.id.score1);
-                  one.setVisibility(View.GONE);
-                  EditText two = findViewById(R.id.score2);
-                  two.setVisibility(View.GONE);
-              }
-              if (setUp.equals("Coach")){
-                  Button ready = (Button) findViewById(R.id.match_ready);
-                  ready.setVisibility(View.GONE);
-                  Button Submit = (Button) findViewById(R.id.submitScoreButton);
-                  Submit.setVisibility(View.GONE);
-                  EditText one = findViewById(R.id.score1);
-                  one.setVisibility(View.GONE);
-                  EditText two = findViewById(R.id.score2);
-                  two.setVisibility(View.GONE);
+      Log.d(TAG, "onCreate: email " + currentUser.getEmail());
 
-              }
-          }
-      });
+
+
+
+//      db.collection("user").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//          @Override
+//          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//            //  DocumentSnapshot documentSnapshot = task.getResult();
+////              String setUp = documentSnapshot.get("Usertype").toString();
+////              if (setUp.equals("Wrestler")){
+////                displayPlayer();
+////              }
+////              if (setUp.equals("Coach")){
+////                  displayCoach();
+////
+////              }
+//          }
+//
+//
+//      });
 
       player1name = getIntent().getStringExtra("player1name");
       player1email = getIntent().getStringExtra("player1email");
@@ -95,7 +89,49 @@ public class MatchActivity extends AppCompatActivity {
 
       db = FirebaseFirestore.getInstance();
       notificationManager = NotificationManagerCompat.from(this);
+      getEmail();
   }
+
+  public void getEmail(){
+      db.collection("user").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+          @Override
+          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+              DocumentSnapshot documentSnapshot = task.getResult();
+              String setUp = documentSnapshot.getString("userType");
+              if (setUp.equals("Wrestler")){
+                displayPlayer();
+              }
+              if (setUp.equals("Coach")){
+                  displayCoach();
+
+              }
+
+          }
+      });
+
+  }
+
+  public void displayCoach(){
+      Button ready = (Button) findViewById(R.id.match_ready);
+                  ready.setVisibility(View.GONE);
+                  Button Submit = (Button) findViewById(R.id.submitScoreButton);
+                  Submit.setVisibility(View.GONE);
+                  EditText one = findViewById(R.id.score1);
+                  one.setVisibility(View.GONE);
+                  EditText two = findViewById(R.id.score2);
+                  two.setVisibility(View.GONE);
+  }
+  public void displayPlayer(){
+      Button ready = (Button) findViewById(R.id.match_ready);
+      ready.setVisibility(View.GONE);
+      Button Submit = (Button) findViewById(R.id.submitScoreButton);
+      Submit.setVisibility(View.GONE);
+      EditText one = findViewById(R.id.score1);
+      one.setVisibility(View.GONE);
+      EditText two = findViewById(R.id.score2);
+      two.setVisibility(View.GONE);
+
+    }
 
 
     public void sendOnChannel3(View v) {
