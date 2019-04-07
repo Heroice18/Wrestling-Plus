@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Users" + db.collection("user").get());
         String emailData = currentUser.getEmail();
         Log.d(TAG, "onStart: emaildata " + emailData);
-        Log.d(TAG, "Users " + db.collection("user").document(currentUser.getEmail()).get());
-        db.collection("user").document(emailData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Log.d(TAG, "onComplete: 2 ");
-            }
-        });
+//        Log.d(TAG, "Users " + db.collection("user").document(currentUser.getEmail()).get());
+//        db.collection("user").document(emailData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                Log.d(TAG, "onComplete: 2 ");
+//            }
+//        });
 
         db.collection("user").document(emailData).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -118,9 +118,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                boolean set = true;
-                check = set;
-
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.d(TAG, "Current data: " + documentSnapshot.getData());
                     String value = documentSnapshot.get("ready").toString();
@@ -130,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                         notification3();
                         Log.d(TAG, "onEvent: checking id " + check);
                     }
-                } else {
+                }
+                else {
                     Log.d(TAG, "Current data: null");
 
             }
@@ -151,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void notification3(){
+        Log.d(TAG, "notification3: check " + check);
         String title = "Match Is Ready!";
         String message = "Your next match is ready! Please head there right away!";
 
@@ -163,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         notificationManager.notify(null,0, notification);
+        //check = false;
     }
 
 
