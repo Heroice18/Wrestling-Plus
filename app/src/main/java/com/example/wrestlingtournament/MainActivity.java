@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -76,19 +77,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        db.collection("user").document(currentUser.getEmail()).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        noteListener = db.collection("user").document("icyhot@gmail.com").addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(e != null){
-                    Log.d(TAG, "onEvent: Error in grabbing");
-                    Log.d(TAG, "onEvent: " + e.toString());
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(MainActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
                     return;
                 }
 
-                if(documentSnapshot.exists()){
-                    Log.d(TAG, "onEvent: Sucess");
-                    String title = "You're Next Match Is Ready!";
-                    String message = "Please head to you're next match as soon as possible";
+                if (documentSnapshot.exists()) {
+                    Log.d(TAG, "onEvent: entering here ");
+                    String title = "Match Is Ready!";
+                    String message = "Your next match is ready! Please head there right away!";
 
                     Notification notification = new NotificationCompat.Builder(MainActivity.this, CHANNEL_3_ID)
                             .setSmallIcon(R.drawable.logo)
@@ -99,16 +100,16 @@ public class MainActivity extends AppCompatActivity {
                             .build();
 
                     notificationManager.notify(1, notification);
+//                    String title = documentSnapshot.getString(KEY_TITLE);
+//                    String description = documentSnapshot.getString(KEY_DESCRIPTION);
+//
+//                    textViewData.setText("Title: " + title + "\n" + "Description: " + description);
                 }
             }
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
 
-    }
 
     @Override
     protected void onResume() {

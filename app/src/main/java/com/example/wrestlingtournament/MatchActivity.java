@@ -78,7 +78,13 @@ public class MatchActivity extends AppCompatActivity {
 
         db.collection("user").document(player2email).set(data, SetOptions.merge());
 
-      data.clear();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Log.d(TAG, "sendOnChannel3: ");
+            e.printStackTrace();
+        }
+        data.clear();
       data.put("ready", false);
       db.collection("user").document(player1email).set(data, SetOptions.merge());
         db.collection("user").document(player2email).set(data, SetOptions.merge());
