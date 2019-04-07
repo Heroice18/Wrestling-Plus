@@ -2,6 +2,11 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * This contains all of the information necessary for a tournament.
+ *
+ * @author Team 02-01
+ */
 public class TournamentObject {
     private String _tournamentName;
     private List<WrestlerObject> _wrestlers;

@@ -1,5 +1,10 @@
 package com.example.wrestlingtournament;
 
+/**
+ * This contains all of the information necessary for any given match.
+ *
+ * @author Team 02-01
+ */
 public class MatchObject {
 
     private WrestlerObject _wrestlerTop;

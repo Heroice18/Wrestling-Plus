@@ -25,6 +25,11 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class contains all of the data for an individual match for a tournament.
+ *
+ * @author Team 02-01
+ */
 public class MatchActivity extends AppCompatActivity {
     public static final String TAG = "MatchActivity";
     FirebaseFirestore db;
@@ -117,8 +122,7 @@ public class MatchActivity extends AppCompatActivity {
       two.setVisibility(View.GONE);
 
     }
-
-
+    
     public void sendOnChannel3(View v) {
         Map<String, Object> data = new HashMap<>();
         data.put("ready", true);
@@ -138,7 +142,12 @@ public class MatchActivity extends AppCompatActivity {
       db.collection("user").document(player1email).set(data, SetOptions.merge());
         db.collection("user").document(player2email).set(data, SetOptions.merge());
     }
-
+  
+  /**
+   * This function submits the final score of the match.
+   *
+   * @param view
+   */
   public void submitScore(View view) {
 
       //make sure scores have been entered

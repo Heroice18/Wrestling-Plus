@@ -2,6 +2,11 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * This class holds all of the data that a Coach has control over.
+ *
+ * @author Team 02-01
+ */
 public class CoachObject extends UserObject {
 
     private String _schoolName;
@@ -18,19 +23,24 @@ public class CoachObject extends UserObject {
 
     public String get_schoolName() { return _schoolName; }
     public void set_schoolName(String schoolName) { _schoolName = schoolName; }
-
+    
+    /**
+     * This function will add a team from the _teams list.
+     *
+     * @param division
+     * @param players
+     * @return Returns true if the team was made, otherwise returns false.
+     */
     public void makeTeam(DivisionNames division, List<WrestlerObject> players) {
         TeamObject newTeam = new TeamObject(this, division, players);
         _teams.add(newTeam);
     }
 
     /**
+     * This function will remove a team from the _teams list.
      *
-     * @param division The division name from DivisionNames enum.
-     *
+     * @param division
      * @return Returns true if the team was removed, otherwise returns false.
-     *
-     * This
      */
     public boolean removeTeam(DivisionNames division) {
         if (division == DivisionNames.VARSITY)
@@ -50,15 +60,11 @@ public class CoachObject extends UserObject {
     }
 
     /**
-     * makeWrestler();
-     *
-     * parameter String firstName
-     * parameter String lastName
-     * parameter String email
-     *
-     * return void
-     *
      * This function creates a new Wrestler and adds it to the default _teams entry, MYTEAM.
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
      */
     public void makeWrestler(String firstName, String lastName, String email) {
         WrestlerObject newWrestler = new WrestlerObject(firstName, lastName,_schoolName, email);
@@ -66,17 +72,15 @@ public class CoachObject extends UserObject {
     }
 
     /**
-     * addWrestlerToTeam();
-     *
-     * parameter WrestlerObject
-     * parameter DivisionNames
-     *
-     * return boolean
-     *
      * This function adds a Wrestler to the desired team in the Coach's _teams list.
+     *
      * The function removes the Wrestler from the previous team. Returns true if player was
      * successfully added to a new team, and false if the DivisionNames value passed did not exist
      * in the Coach's _teams list.
+     *
+     * @param wrestler
+     * @param division
+     * @return Returns whether the wrestler was successfully added to the team or not.
      */
     public boolean addWrestlerToTeam(WrestlerObject wrestler, DivisionNames division) {
 

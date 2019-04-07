@@ -45,6 +45,8 @@ import static android.view.View.VISIBLE;
 /**
  * This Activity holds everything we need for the activity_team_manage.xml including creation,
  * button onClick functions, and the spinner selector with its database connections.
+ *
+ * @author Team 02-01
  */
 public class teamManage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 

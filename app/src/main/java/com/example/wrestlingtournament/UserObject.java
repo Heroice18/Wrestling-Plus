@@ -1,5 +1,10 @@
 package com.example.wrestlingtournament;
 
+/**
+ * This class contains all of a users information.
+ *
+ * @author Team 02-01
+ */
 public class UserObject {
 
     private String email;
