@@ -153,6 +153,10 @@ public class TournamentActivity extends AppCompatActivity {
 
   }
     public void sendOnChannel1(View v) {
+
+
+
+
         String title = "Hey";
         String message = "Message";
 

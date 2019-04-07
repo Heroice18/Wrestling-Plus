@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
-        
+        notificationManager = NotificationManagerCompat.from(getApplicationContext());
         setUp();
+
+
 
 
     }
@@ -79,6 +81,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+//        String title = "Match Is Ready!";
+//        String message = "Your next match is ready! Please head there right away!";
+//
+//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
+//                .setSmallIcon(R.drawable.logo)
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                .build();
+//
+//        notificationManager.notify(null,0, notification);
+
+
         Log.d(TAG, "onStart: email " + currentUser.getEmail());
         Log.d(TAG, "Users" + db.collection("user").get());
         String emailData = currentUser.getEmail();
@@ -95,71 +112,57 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Log.d(TAG, "onEvent: checking this");
-                if(e != null)
-                {
-                    Log.d(TAG, "onEvent: " +e);
+
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
                 }
-                Log.d(TAG, "onEvent: entering here ");
+
                 boolean set = true;
                 check = set;
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                    String value = documentSnapshot.get("ready").toString();
+                    Log.d(TAG, "onEvent: string " + check);
+                    if(value.equals("true")){
+                        check = true;
+                        notification3();
+                        Log.d(TAG, "onEvent: checking id " + check);
+                    }
+                } else {
+                    Log.d(TAG, "Current data: null");
+
+            }
+
+
+
+                Log.d(TAG, "onEvent: entering here ");
+
                 
                 Log.d(TAG, "onEvent: notification complete");
             }
         });
-        
-        if(check == true)
-        {
-            Log.d(TAG, "onStart: here");
-            String title = "Match Is Ready!";
-            String message = "Your next match is ready! Please head there right away!";
 
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
-                    .setSmallIcon(R.drawable.logo)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .build();
+        Log.d(TAG, "onStart: checking id2 " + check);
 
-            notificationManager.notify(1, notification);
-            check = false;
-        }
         
 
-//        if(db.collection("user").document(emailData).get().isSuccessful())
-//        {
-//            Log.d(TAG, "onStart: Hey its working");
-//            noteListener = db.collection("user").document("icyhot@gmail.com").addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//                @Override
-//                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-//                    if (e != null) {
-//                        Toast.makeText(MainActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
-//                        Log.d(TAG, e.toString());
-//                        return;
-//                    }
-//
-//                    if (documentSnapshot.exists()) {
-//                        Log.d(TAG, "onEvent: entering here ");
-//                        String title = "Match Is Ready!";
-//                        String message = "Your next match is ready! Please head there right away!";
-//
-//                        Notification notification = new NotificationCompat.Builder(MainActivity.this, CHANNEL_3_ID)
-//                                .setSmallIcon(R.drawable.logo)
-//                                .setContentTitle(title)
-//                                .setContentText(message)
-//                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                                .build();
-//
-//                        notificationManager.notify(1, notification);
-//
-//                    }
-//                }
-//            });
-//        }
-//        else{
-//            Log.d(TAG, "onStart: Not Working");
-//        }
+    }
+
+    public void notification3(){
+        String title = "Match Is Ready!";
+        String message = "Your next match is ready! Please head there right away!";
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(null,0, notification);
     }
 
 
