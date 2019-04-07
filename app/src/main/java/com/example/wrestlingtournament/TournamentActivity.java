@@ -1,6 +1,5 @@
 package com.example.wrestlingtournament;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,27 +11,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -101,8 +94,8 @@ public class TournamentActivity extends AppCompatActivity {
     //setLevels();
 
     players = new Vector<>();
-    divisionSpinner = (Spinner) findViewById(R.id.level);
-    weighClassSpinner = (Spinner) findViewById(R.id.weightClass);
+    divisionSpinner = findViewById(R.id.level);
+    weighClassSpinner = findViewById(R.id.weightClass);
     division = divisionSpinner.getSelectedItem().toString();
     weightClass = weighClassSpinner.getSelectedItem().toString();
 
@@ -148,8 +141,8 @@ public class TournamentActivity extends AppCompatActivity {
     setTournamentName();
 
     round = 1;
-    nextRoundBtn = (ImageButton) findViewById(R.id.nextRoundButton);
-    lastRoundBtn = (ImageButton) findViewById(R.id.lastRoundButton);
+    nextRoundBtn = findViewById(R.id.nextRoundButton);
+    lastRoundBtn = findViewById(R.id.lastRoundButton);
     lastRoundBtn.setEnabled(false);
 
       notificationManager = NotificationManagerCompat.from(this);
@@ -178,9 +171,6 @@ public class TournamentActivity extends AppCompatActivity {
     }
 
     public void sendOnChannel1(View v) {
-
-
-
 
         String title = "Hey";
         String message = "Message";
@@ -251,7 +241,6 @@ public class TournamentActivity extends AppCompatActivity {
       Log.d(TAG, "setMatchList: current round string = " + currentRound );
         roundNumTextView.setText(currentRound);
       matchList = findViewById(R.id.matchList);
-      //final String[] players;
       myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
       for(int i = minCount; i < maxCount; i++) {

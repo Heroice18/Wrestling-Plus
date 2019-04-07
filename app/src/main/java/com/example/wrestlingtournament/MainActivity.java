@@ -15,11 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,9 +36,7 @@ import javax.annotation.Nullable;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.example.wrestlingtournament.App.CHANNEL_1_ID;
 import static com.example.wrestlingtournament.App.CHANNEL_3_ID;
-import static com.example.wrestlingtournament.Login_Start.location;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,32 +77,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-//        String title = "Match Is Ready!";
-//        String message = "Your next match is ready! Please head there right away!";
-//
-//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
-//                .setSmallIcon(R.drawable.logo)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                .build();
-//
-//        notificationManager.notify(null,0, notification);
-
-
         Log.d(TAG, "onStart: email " + currentUser.getEmail());
         Log.d(TAG, "Users" + db.collection("user").get());
         String emailData = currentUser.getEmail();
         Log.d(TAG, "onStart: emaildata " + emailData);
-        Log.d(TAG, "Users " + db.collection("user").document(currentUser.getEmail()).get());
-        db.collection("user").document(emailData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Log.d(TAG, "onComplete: 2 ");
-            }
-        });
 
         db.collection("user").document(emailData).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -118,9 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                boolean set = true;
-                check = set;
-
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.d(TAG, "Current data: " + documentSnapshot.getData());
                     String value = documentSnapshot.get("ready").toString();
@@ -130,27 +101,19 @@ public class MainActivity extends AppCompatActivity {
                         notification3();
                         Log.d(TAG, "onEvent: checking id " + check);
                     }
-                } else {
+                }
+                else {
                     Log.d(TAG, "Current data: null");
-
             }
-
-
-
                 Log.d(TAG, "onEvent: entering here ");
-
-                
                 Log.d(TAG, "onEvent: notification complete");
             }
         });
-
         Log.d(TAG, "onStart: checking id2 " + check);
-
-        
-
     }
 
     public void notification3(){
+        Log.d(TAG, "notification3: check " + check);
         String title = "Match Is Ready!";
         String message = "Your next match is ready! Please head there right away!";
 
@@ -163,9 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         notificationManager.notify(null,0, notification);
+        //check = false;
     }
-
-
 
     @Override
     protected void onResume() {
@@ -242,10 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         String check = box.getString("USER");
 
-        // Intent soda = new Intent();
-        //String check = soda.getStringExtra(location);
         display = findViewById(R.id.textView5);
-
 
         db.collection("user").document(currentUser.getEmail()).
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -257,8 +216,6 @@ public class MainActivity extends AppCompatActivity {
                     emailName = document.getString("firstName");
                     emailName = emailName + "'s Account";
                     display.setText(emailName);
-
-
                     }
                     Log.d(TAG, "onComplete: of this: " + emailName);
                 }
