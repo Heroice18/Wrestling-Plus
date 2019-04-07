@@ -54,22 +54,7 @@ public class MatchActivity extends AppCompatActivity {
 
 
 
-//      db.collection("user").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//          @Override
-//          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//            //  DocumentSnapshot documentSnapshot = task.getResult();
-////              String setUp = documentSnapshot.get("Usertype").toString();
-////              if (setUp.equals("Wrestler")){
-////                displayPlayer();
-////              }
-////              if (setUp.equals("Coach")){
-////                  displayCoach();
-////
-////              }
-//          }
-//
-//
-//      });
+
 
       player1name = getIntent().getStringExtra("player1name");
       player1email = getIntent().getStringExtra("player1email");
