@@ -83,9 +83,6 @@ public class Login_Start extends AppCompatActivity{
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
-//        Button create = findViewById(R.id.login);
-//        create.setBackgroundColor(Color.BLUE);
-        //emailEditText.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -99,8 +96,6 @@ public class Login_Start extends AppCompatActivity{
         fbUser = mAuth.getCurrentUser();
         updateActivity();
     }
-    //String check;
-    //Intent send = new Intent(this, MainActivity.class);
 
     //Creates a new account using email and password to firebase
     //Also submits the firstname, lastname, email, and usertype to create a user document in firestore
@@ -291,24 +286,14 @@ public class Login_Start extends AppCompatActivity{
         coachButton.setVisibility(VISIBLE);
         RadioButton playerButton = findViewById(R.id.wrestler);
         playerButton.setVisibility(VISIBLE);
-//        Button log = (Button) findViewById(R.id.login);
-//        log.setVisibility(GONE);
-//        Button in = (Button) findViewById(R.id.login);
-//        in.setVisibility(GONE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(GONE);
         Button login = (Button) findViewById(R.id.logButton);
         login.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(VISIBLE);
-
-
-
     }
 
-    public void popUp(View p){
-
-    }
     public void returnBack(View B)
     {
         EditText first = findViewById(R.id.fName);
@@ -325,16 +310,9 @@ public class Login_Start extends AppCompatActivity{
         playerButton.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);
-
-//        Button log = (Button) findViewById(R.id.login);
-//        log.setVisibility(VISIBLE);
-//        Button in = (Button) findViewById(R.id.login);
-//        in.setVisibility(VISIBLE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(VISIBLE);
         Button login = (Button) findViewById(R.id.logButton);
         login.setVisibility(VISIBLE);
-        //Button back = (Button) findViewById(R.id.goBack);
-
     }
 }

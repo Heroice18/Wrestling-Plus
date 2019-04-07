@@ -1,10 +1,7 @@
 package com.example.wrestlingtournament;
 
 import android.content.DialogInterface;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,14 +34,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.view.View.VISIBLE;
-import static java.security.AccessController.getContext;
 
 /**
  * This Activity holds everything we need for the activity_team_manage.xml including creation,
@@ -139,8 +133,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
 
         ListView title = findViewById(R.id.team_list);
         title.setVisibility(VISIBLE);
-
-
     }
 
     /**
@@ -190,14 +182,8 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
     public void confirmAdd(View c)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
-//        TextView title = null;
-//        title.setText("Submit Wrestler's Email");
-//        title.setTypeface(null, Typeface.BOLD);
         String total = "Submit Wrestler's Email";
-
-
         builder.setTitle(R.string.submit_wrestler);
-
         builder.setIcon(R.drawable.wplus);
 
 // Set up the input
@@ -257,7 +243,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         builder.show();
-
     }
 
     /**
@@ -287,8 +272,6 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                 R.layout.spinner_cell, coachesTournaments);
         dialog_spinner.getOnItemSelectedListener();
         data.setDropDownViewResource(R.layout.spinner_dropdown);
-//        dialog_spinner.getBackground().setColorFilter(ContextCompat.getColor(
-//                getContext(), R.color.Blue), PorterDuff.Mode.SRC_ATOP        ));
         dialog_spinner.setAdapter(data);
         builder.setView(dialog_spinner);
 
@@ -360,7 +343,7 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        //MOved the team map to be public at the top of the file
+                        //Moved the team map to be public at the top of the file
                         teamMap = document.getData();
 
                          // Here we'll iterate through and assign the names to the list view

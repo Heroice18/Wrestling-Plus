@@ -75,8 +75,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tournaments);
 
-        //totalTeam.add("Default Tournament");
-        //totalTournaments.add("first");
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_listview, newTeam);
         ArrayAdapter<String> data = new ArrayAdapter<String>(this,
@@ -87,7 +85,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         varsity = findViewById(R.id.Varsity);
         newTeam.add("Default Player");
         teamLoad.setOnItemSelectedListener(this);
-        //teamLoad.setAdapter(adapter);
         data.setDropDownViewResource(R.layout.spinner_dropdown);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -113,7 +110,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     }
 
     public void grabPlayers(){
-        //Log.d(TAG, "grabPlayers: Current" + currentUser.getDisplayName());
         playerType = findViewById(R.id.radioGroup);
         if (playerType.getCheckedRadioButtonId() != -1) {
             type = ((RadioButton) findViewById(playerType.getCheckedRadioButtonId())).getText().toString().toLowerCase();
@@ -133,7 +129,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                         Log.d(TAG, document.getId() + " => " + document.getData());
 
                         TournamentStore = document.getData();
-                       // Log.d(TAG, "onComplete: tournament added" + TournamentStore);
                         for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
                             String key = entry.getKey();
                             /*
@@ -141,7 +136,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                              */
                             Log.d(TAG, "9onComplete key: " + key);
                             String value = entry.getValue().toString();
-                            //String division = "freshman";
                             if(key.equals("division")){
                                 divisionName = value;
                             }
@@ -171,37 +165,7 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                     ListView listView = (ListView) findViewById(R.id.PlayerList);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
-
-
                 }
-
-
-
-
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.i(TAG, "onComplete: " + "Getting the Player List");
-//                        Log.d(TAG, document.getId() + " ==> " + document.getData());
-//                        Log.d(TAG, "onComplete of document: " + document);
-//                        String name = "name";
-//                        TournamentStore = document.getData();
-//
-//                        Log.d(TAG, "onComplete storage: " + TournamentStore);
-//
-//                        for(Map.Entry<String,Object> entry : TournamentStore.entrySet()){
-//                            String key = entry.getKey();
-//                            Log.d(TAG, "onComplete key: " + key);
-//                            if(key.equals("Player")) {
-//                                String value = entry.getValue().toString();
-//                                Log.d(TAG, "onComplete value: " + value);
-//                                Log.d(TAG, "onComplete: Entering if name");
-//                                populate.add(value);
-//
-//                            }
-//                            Log.d(TAG, "onComplete passing: " + totalTournaments);
-//                        }
-//                        newTeam = populate;
-//                        updateActivity();
-//                    }
             }
         });
     }
@@ -334,14 +298,12 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
                        float weight2 = (Float) Float.parseFloat(m_Text);
                        int weight = (int) Math.floor(weight2);
-                       //int weight = (int) weight2;
                        Log.d(TAG, "onClick: Math complete " + weight);
 
                        Log.d(TAG, "onClick: weight " + weight);
 
                        //This part will have to go into the default tournament setting in the tournaments section
                        Log.d(TAG, "onClick: tournament " + current_Tournament);
-                       //if(db.collection("tournaments").document(current_Tournament).collection("addedPlayers").get().isSuccessful()) {
 
                        Log.d(TAG, "onClick: tournament addedPlayers");
                        Map<String, Object> playerStat = new HashMap<>();
@@ -423,7 +385,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
        });
         grabPlayers();
         updateActivity();
-
     }
 
     /**
@@ -495,19 +456,16 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                 });
 
                 builder.show();
-            }
+    }
 
     public void refresh(View r){
         Log.d(TAG, "refresh: before " + newTeam);
         ArrayList<String> newClear = new ArrayList<String>();
-        //newTeam = newClear;
         ArrayAdapter adapter = new ArrayAdapter<String>(manageTournaments.this,
                 R.layout.activity_listview, newTeam);
         newTeam.clear();
         adapter.notifyDataSetChanged();
         Log.d(TAG, "refresh: after " + newTeam);
-
- //       adapter.clear();
 
         grabPlayers();
         Log.d(TAG, "refresh: super after " + newTeam);
@@ -524,7 +482,6 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
         grabPlayers();
-        //showPlayers();
     }
 
     @Override
