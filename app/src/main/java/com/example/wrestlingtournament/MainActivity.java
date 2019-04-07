@@ -77,32 +77,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-//        String title = "Match Is Ready!";
-//        String message = "Your next match is ready! Please head there right away!";
-//
-//        Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
-//                .setSmallIcon(R.drawable.logo)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                .build();
-//
-//        notificationManager.notify(null,0, notification);
-
-
         Log.d(TAG, "onStart: email " + currentUser.getEmail());
         Log.d(TAG, "Users" + db.collection("user").get());
         String emailData = currentUser.getEmail();
         Log.d(TAG, "onStart: emaildata " + emailData);
-//        Log.d(TAG, "Users " + db.collection("user").document(currentUser.getEmail()).get());
-//        db.collection("user").document(emailData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                Log.d(TAG, "onComplete: 2 ");
-//            }
-//        });
 
         db.collection("user").document(emailData).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
