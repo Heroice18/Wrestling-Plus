@@ -1,7 +1,10 @@
 package com.example.wrestlingtournament;
 
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.wrestlingtournament.App.CHANNEL_1_ID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +33,7 @@ import java.util.Map;
 public class MatchActivity extends AppCompatActivity {
     public static final String TAG = "MatchActivity";
     FirebaseFirestore db;
+    private NotificationManagerCompat notificationManager;
     String player1name;
     String player1email;
     String player2name;
@@ -56,7 +66,32 @@ public class MatchActivity extends AppCompatActivity {
       player2Score = findViewById(R.id.score2);
 
       db = FirebaseFirestore.getInstance();
+      notificationManager = NotificationManagerCompat.from(this);
   }
+
+
+    public void sendOnChannel3(View v) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("ready", true);
+        Log.d(TAG, "sendOnChannel3: sucess  " +  db.collection("user").document(player1email).set(data, SetOptions.merge()));
+        db.collection("user").document(player1email).set(data, SetOptions.merge());
+
+        db.collection("user").document(player2email).set(data, SetOptions.merge());
+
+      data.clear();
+      data.put("ready", false);
+      db.collection("user").document(player1email).set(data, SetOptions.merge());
+        db.collection("user").document(player2email).set(data, SetOptions.merge());
+
+
+
+    }
+
+
+
+
+
+
 
   public void submitScore(View view) {
 
