@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TournamentActivity">
+    tools:context=".TournamentActivity"
+    android:background="@color/Light_Blue">
 
     <TextView
         android:id="@+id/tournamentName"
@@ -13,24 +14,40 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
+
+        android:background="@color/Blue"
+        android:fontFamily=""
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textColor="#f2f2f2"
+        android:textSize="25dp"
+        android:textStyle="bold"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/matchList"
-        android:layout_width="370dp"
-        android:layout_height="381dp"
+        android:layout_width="326dp"
+        android:layout_height="284dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/tournament_listview"
         android:divider="#000"
         android:dividerHeight="2sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.941" />
 
     <Spinner
         android:id="@+id/level"
@@ -41,6 +58,8 @@
         android:layout_marginBottom="8dp"
         android:entries="@array/tournamentViewLevelSelection"
         android:spinnerMode="dropdown"
+        android:background="@drawable/spinner_layout"
+        android:popupBackground="@drawable/popup_background_spinner"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/matchList"
         app:layout_constraintEnd_toStartOf="@+id/weightClass"
@@ -52,6 +71,8 @@
         android:id="@+id/weightClass"
         android:layout_width="162dp"
         android:layout_height="45dp"
+        android:background="@drawable/spinner_layout"
+        android:popupBackground="@drawable/popup_background_spinner"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
@@ -74,7 +95,7 @@
         app:layout_constraintBottom_toTopOf="@+id/matchList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/roundNumView"
+        app:layout_constraintStart_toEndOf="@+id/lastRoundButton"
         app:srcCompat="@drawable/forwardicon" />
 
     <ImageButton
@@ -85,7 +106,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="previousRound"
         app:layout_constraintBottom_toTopOf="@+id/matchList"
-        app:layout_constraintEnd_toStartOf="@+id/roundNumView"
+        app:layout_constraintEnd_toStartOf="@+id/nextRoundButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,6 +114,7 @@
 
     <Button
         android:id="@+id/button"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -120,5 +142,29 @@
         app:layout_constraintEnd_toStartOf="@+id/nextRoundButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/lastRoundButton" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/Teal"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="To View A Match Tap On A Name Below"
+        android:textColor="@color/Blue"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.226" />
 
 </android.support.constraint.ConstraintLayout>

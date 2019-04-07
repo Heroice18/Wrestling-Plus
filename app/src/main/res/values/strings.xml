@@ -44,4 +44,12 @@
 
     <string name="submit_team"><b>Submit This Team To Tournament:</b></string>
 
+    <string name="Tied"><b>Tied Match</b></string>
+
+    <string name="Confirm"><b>Confirm Winner</b></string>
+    <string name="Final"><b>Are You Sure You Want To Finalize Your Tournament?</b></string>
+    <string name="Coach_Email"><b>Enter Coach\'s Email:</b></string>
+    <string name="submit_weight"><b>Confirm Wrestler\'s Weight</b></string>
+
+
 </resources>

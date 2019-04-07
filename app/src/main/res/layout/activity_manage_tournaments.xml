@@ -22,11 +22,12 @@
         android:paddingTop="5dp"
         android:paddingRight="5dp"
         android:paddingBottom="5dp"
-        android:text="Select a tournament to manage"
         android:textAlignment="center"
         android:textColor="#f2f2f2"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:text="Select a tournament to manage"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,10 +48,11 @@
         android:paddingTop="5dp"
         android:paddingRight="10dp"
         android:paddingBottom="5dp"
-        android:text="Tap on a player to confirm their weight"
         android:textColor="@color/Blue"
         android:textSize="15dp"
         android:textStyle="bold"
+        android:text="Tap on a player to confirm their weight"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -66,13 +68,13 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/spinner_layout"
-        android:textAlignment="center"
         android:popupBackground="@drawable/popup_background_spinner"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.117" />
+        app:layout_constraintVertical_bias="0.102" />
 
     <RadioGroup
         android:id="@+id/radioGroup"

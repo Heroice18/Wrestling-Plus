@@ -8,11 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -33,11 +38,44 @@ public class MatchActivity extends AppCompatActivity {
     TextView player1Score;
     TextView player2Score;
     String tournamentRef;
+    FirebaseUser currentUser;
+    FirebaseAuth mAuth;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_match);
+
+    //Removes the buttons and score adders for players and coaches
+      currentUser = mAuth.getCurrentUser();
+      currentUser.getEmail();
+      db.collection("user").document(currentUser.getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+          @Override
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+              String setUp = documentSnapshot.get("Usertype").toString();
+              if (setUp.equals("Wrestler")){
+                  Button ready = (Button) findViewById(R.id.match_ready);
+                  ready.setVisibility(View.GONE);
+                  Button Submit = (Button) findViewById(R.id.submitScoreButton);
+                  Submit.setVisibility(View.GONE);
+                  EditText one = findViewById(R.id.score1);
+                  one.setVisibility(View.GONE);
+                  EditText two = findViewById(R.id.score2);
+                  two.setVisibility(View.GONE);
+              }
+              if (setUp.equals("Coach")){
+                  Button ready = (Button) findViewById(R.id.match_ready);
+                  ready.setVisibility(View.GONE);
+                  Button Submit = (Button) findViewById(R.id.submitScoreButton);
+                  Submit.setVisibility(View.GONE);
+                  EditText one = findViewById(R.id.score1);
+                  one.setVisibility(View.GONE);
+                  EditText two = findViewById(R.id.score2);
+                  two.setVisibility(View.GONE);
+
+              }
+          }
+      });
 
       player1name = getIntent().getStringExtra("player1name");
       player1email = getIntent().getStringExtra("player1email");
@@ -94,8 +132,9 @@ public class MatchActivity extends AppCompatActivity {
       Log.d(TAG, "submitScore: score 1 - score 2: " + score1 + " - " + score2);
       if (score1 > score2) {
           Log.d(TAG, "submitScore: wrestler1 wins");
-          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this);
-          builder.setTitle("Confirm Winner");
+          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this, R.style.DialogBox);
+          builder.setTitle(R.string.Confirm);
+          builder.setIcon(R.drawable.wplus);
 
           String confirmMessage = player1name + " is the winner with a score of " + score1 + " - " + score2
                   + ". Once you confirm the score, you cannot change it. Press confirm to finalize and submit score";
@@ -132,8 +171,8 @@ public class MatchActivity extends AppCompatActivity {
       }
       else if (score2 > score1) {
           Log.d(TAG, "submitScore: wrestler2 wins");
-          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this);
-          builder.setTitle("Confirm Winner");
+          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this, R.style.DialogBox);
+          builder.setTitle(R.string.Confirm);
 
           String confirmMessage = player2name + " is the winner with a score of " + score2 + " - " + score1
                   + ". Once you confirm the score, you cannot change it. Press confirm to finalize and submit score";
@@ -169,8 +208,8 @@ public class MatchActivity extends AppCompatActivity {
           builder.show();
       }
       else {
-          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this);
-          builder.setTitle("Tied Match");
+          AlertDialog.Builder builder = new AlertDialog.Builder(MatchActivity.this, R.style.DialogBox);
+          builder.setTitle(R.string.Tied);
           builder.setMessage("Tied games cannot be submitted.");
           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {

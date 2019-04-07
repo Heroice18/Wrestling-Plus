@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MatchActivity">
+    tools:context=".MatchActivity"
+    android:background="@color/Light_Blue">
 
     <TextView
         android:id="@+id/vsTextView"
@@ -15,37 +16,69 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="VS"
+        android:textColor="@color/Blue"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/submitScoreButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.533"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/player1Name"
-        android:layout_width="360dp"
-        android:layout_height="41dp"
+        android:layout_width="325dp"
+        android:layout_height="91dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/Blue"
+        android:fontFamily=""
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:text="Player 1"
+        android:textAlignment="center"
+        android:textColor="#f2f2f2"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/score1"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.062"
         app:layout_constraintVertical_chainStyle="spread" />
 
     <TextView
         android:id="@+id/player2Name"
-        android:layout_width="337dp"
-        android:layout_height="43dp"
+        android:layout_width="325dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
+        android:background="@color/Blue"
+        android:fontFamily=""
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+
+        android:paddingBottom="5dp"
+
         android:text="Player 2"
-        android:textAlignment="textEnd"
+        android:textAlignment="center"
+        android:textColor="#f2f2f2"
         android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/score2" />
 
     <EditText
@@ -60,7 +93,8 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/vsTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player1Name" />
+        app:layout_constraintTop_toBottomOf="@+id/player1Name"
+        app:layout_constraintVertical_bias="0.315" />
 
     <EditText
         android:id="@+id/score2"
@@ -82,13 +116,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/button_style"
         android:onClick="submitScore"
         android:text="Submit Score"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/vsTextView"
+        app:layout_constraintVertical_bias="0.099" />
 
     <Button
         android:id="@+id/match_ready"
@@ -98,11 +133,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/button_style"
         android:onClick="sendOnChannel3"
         android:text="Match Ready"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintVertical_bias="0.441" />
 </android.support.constraint.ConstraintLayout>

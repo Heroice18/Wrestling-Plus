@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,7 @@ public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
     private NotificationManagerCompat notificationManager;
   public static final String TAG = "TournamentActivity";
+    FirebaseUser currentUser;
   FirebaseUser user;
   FirebaseAuth mAuth;
   String tournamentName;
@@ -79,6 +81,7 @@ public class TournamentActivity extends AppCompatActivity {
   boolean isDivisionCreated = false;
   boolean isWeightClassCreated = false;
   Vector<String> players;
+
 
     @Override
   protected void onCreate(Bundle savedInstanceState) {

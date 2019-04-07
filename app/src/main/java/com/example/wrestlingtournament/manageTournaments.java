@@ -276,8 +276,8 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
                             Log.d(TAG, "onComplete passing: " + totalTournaments);
                         }
 
-               AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
-               builder.setTitle("Submit wrestler's weight:");
+               AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this, R.style.DialogBox);
+               builder.setTitle(R.string.submit_weight);
                builder.setIcon(R.drawable.wplus);
 
                 // Set up the input
@@ -396,8 +396,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void addCoach(View a){
 
         //when the add coach button is clicked, a dialog box will come up to ask for the coache's email
-                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this);
-                builder.setTitle("Enter Coaches Email:");
+                AlertDialog.Builder builder = new AlertDialog.Builder(manageTournaments.this, R.style.DialogBox);
+                builder.setIcon(R.drawable.wplus);
+                builder.setTitle(R.string.Coach_Email);
 
         // Set up the input
                 final EditText input = new EditText(manageTournaments.this);
@@ -492,8 +493,9 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     public void finalizeTournament(View f){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Are You Sure You Want To Finalize Your Tournament?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);
+        builder.setTitle(R.string.Final);
+        builder.setIcon(R.drawable.wplus);
         builder.setMessage("WARNING! If you click finalize you cannot " +
                 "edit your tournament further. If everything is ready, click finalize.");
 

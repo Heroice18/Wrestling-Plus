@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -271,7 +272,9 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
         ArrayAdapter<String> data = new ArrayAdapter<>(this,
                 R.layout.spinner_cell, coachesTournaments);
         dialog_spinner.getOnItemSelectedListener();
-        data.setDropDownViewResource(R.layout.spinner_dropdown);
+        data.setDropDownViewResource(R.layout.spinner_cell);
+//        dialog_spinner.getBackground().setColorFilter(ContextCompat.getColor(
+//                getContext(), R.color.Blue), PorterDuff.Mode.SRC_ATOP        ));
         dialog_spinner.setAdapter(data);
         builder.setView(dialog_spinner);
 
