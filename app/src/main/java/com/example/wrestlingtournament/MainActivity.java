@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public Map<String, Object> TournamentStore = new HashMap<>();
     public Map<String, Object> tournamentNameIdMap = new HashMap<>();
     ArrayAdapter<String> myAdapter;
+    public boolean check = false;
     public static final String TAG = "MainActivity";
     public String emailName;
     public TextView display;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.main_screen);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -77,36 +79,87 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        noteListener = db.collection("user").document("icyhot@gmail.com").addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        Log.d(TAG, "onStart: email " + currentUser.getEmail());
+        Log.d(TAG, "Users" + db.collection("user").get());
+        String emailData = currentUser.getEmail();
+        Log.d(TAG, "onStart: emaildata " + emailData);
+        Log.d(TAG, "Users " + db.collection("user").document(currentUser.getEmail()).get());
+        db.collection("user").document(emailData).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(MainActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
-                    return;
-                }
-
-                if (documentSnapshot.exists()) {
-                    Log.d(TAG, "onEvent: entering here ");
-                    String title = "Match Is Ready!";
-                    String message = "Your next match is ready! Please head there right away!";
-
-                    Notification notification = new NotificationCompat.Builder(MainActivity.this, CHANNEL_3_ID)
-                            .setSmallIcon(R.drawable.logo)
-                            .setContentTitle(title)
-                            .setContentText(message)
-                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                            .build();
-
-                    notificationManager.notify(1, notification);
-//                    String title = documentSnapshot.getString(KEY_TITLE);
-//                    String description = documentSnapshot.getString(KEY_DESCRIPTION);
-//
-//                    textViewData.setText("Title: " + title + "\n" + "Description: " + description);
-                }
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d(TAG, "onComplete: 2 ");
             }
         });
+
+        db.collection("user").document(emailData).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                Log.d(TAG, "onEvent: checking this");
+                if(e != null)
+                {
+                    Log.d(TAG, "onEvent: " +e);
+                }
+                Log.d(TAG, "onEvent: entering here ");
+                boolean set = true;
+                check = set;
+                
+                Log.d(TAG, "onEvent: notification complete");
+            }
+        });
+        
+        if(check == true)
+        {
+            Log.d(TAG, "onStart: here");
+            String title = "Match Is Ready!";
+            String message = "Your next match is ready! Please head there right away!";
+
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_3_ID)
+                    .setSmallIcon(R.drawable.logo)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .build();
+
+            notificationManager.notify(1, notification);
+            check = false;
+        }
+        
+
+//        if(db.collection("user").document(emailData).get().isSuccessful())
+//        {
+//            Log.d(TAG, "onStart: Hey its working");
+//            noteListener = db.collection("user").document("icyhot@gmail.com").addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+//                    if (e != null) {
+//                        Toast.makeText(MainActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+//                        Log.d(TAG, e.toString());
+//                        return;
+//                    }
+//
+//                    if (documentSnapshot.exists()) {
+//                        Log.d(TAG, "onEvent: entering here ");
+//                        String title = "Match Is Ready!";
+//                        String message = "Your next match is ready! Please head there right away!";
+//
+//                        Notification notification = new NotificationCompat.Builder(MainActivity.this, CHANNEL_3_ID)
+//                                .setSmallIcon(R.drawable.logo)
+//                                .setContentTitle(title)
+//                                .setContentText(message)
+//                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                                .build();
+//
+//                        notificationManager.notify(1, notification);
+//
+//                    }
+//                }
+//            });
+//        }
+//        else{
+//            Log.d(TAG, "onStart: Not Working");
+//        }
     }
 
 
