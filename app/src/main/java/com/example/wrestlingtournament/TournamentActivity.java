@@ -62,6 +62,7 @@ public class TournamentActivity extends AppCompatActivity {
   int roundSize;
   //handles the next round if a person is passed on to the next round because of odd numbers
   boolean extraOdd;
+  int winningRound;
 
   Spinner divisionSpinner;
   Spinner weighClassSpinner;
@@ -143,14 +144,13 @@ public class TournamentActivity extends AppCompatActivity {
     tournamentRef = "/tournaments/" + tournamentCode + "/divisions/" + division + "/brackets/" + weightClass;
     setTournamentName();
 
+    //initalize the round to the first round
     round = 1;
     nextRoundBtn = findViewById(R.id.nextRoundButton);
     lastRoundBtn = findViewById(R.id.lastRoundButton);
     lastRoundBtn.setEnabled(false);
 
       notificationManager = NotificationManagerCompat.from(this);
-
-
   }
 
     @Override
@@ -160,7 +160,6 @@ public class TournamentActivity extends AppCompatActivity {
 
 
 
-        Log.i(TAG, "On Start .....");
         if (initialPlayerCount % 2 == 0){
             extraOdd = false;
             maxCount = initialPlayerCount;
@@ -189,6 +188,9 @@ public class TournamentActivity extends AppCompatActivity {
         notificationManager.notify(1, notification);
     }
 
+    /**
+     * initalize the bracket by getting all players in it and getting important values from the bracket
+     */
   private void initializeMatch() {
         round = 1;
         db.document(tournamentRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -226,6 +228,19 @@ public class TournamentActivity extends AppCompatActivity {
                             setMatchList();
                         }
                     });
+                    if (initialPlayerCount < 2) {
+                        winningRound = 1;
+                        Log.d(TAG, "onStart: winner will be shown on round 1");
+                    } else {
+                        int roundIndex = 1;
+                        int possible = 2;
+                        while (possible < initialPlayerCount) {
+                            roundIndex++;
+                            possible *= 2;
+                        }
+                        winningRound = roundIndex + 1;
+                        Log.d(TAG, "onStart: the winner will be shown on round " + winningRound);
+                    }
                 }
                 else {
                     Log.d(TAG, "onComplete: could not find bracket");
@@ -233,12 +248,16 @@ public class TournamentActivity extends AppCompatActivity {
                     currentPlayerCount = 0;
                     minCount = 0;
                     maxCount = 0;
+                    winningRound = 0;
                     setMatchList();
                 }
             }
         });
   }
 
+    /**
+     * Fill the match list
+     */
   private void setMatchList() {
         String currentRound = "Round: " + round;
       Log.d(TAG, "setMatchList: current round string = " + currentRound );
@@ -296,46 +315,64 @@ public class TournamentActivity extends AppCompatActivity {
 
   private void setTournamentName() {
     tournamentName = getIntent().getStringExtra("tournamentName");
-    
     final TextView tournamentNameView = findViewById(R.id.tournamentName);
     tournamentNameView.setText(tournamentName);
   }
 
+
   public void nextRound(View view) {
       round++;
-      //after a next round we will always be on atleast round two, so the previous button should be enabled
-      lastRoundBtn.setEnabled(true);
-      Log.d(TAG, "nextRound: current round being viewed - " + round);
-      minCount = maxCount;
-      maxCount = minCount + (roundSize / 2);
-      Log.d(TAG, "nextRound: maxcount - " + maxCount);
-      Log.d(TAG, "nextRound: new minimum counter: " + minCount);
-      Log.d(TAG, "nextRound: new maximum counter " + maxCount);
-      if (extraOdd) {
-          maxCount++;
-          Log.d(TAG, "nextRound: there was a odd to be added. maxcount is now - " + maxCount);
-          extraOdd = false;
-      }
-      if (maxCount >= currentPlayerCount) {
-          maxCount = currentPlayerCount;
-          Log.d(TAG, "nextRound: max count was too big. It is now - " + maxCount);
+      //check to see if we are displaying the champion, aka the last possible list view
+      if (round >= winningRound) {
+          lastRoundBtn.setEnabled(true);
           nextRoundBtn.setEnabled(false);
+          Log.d(TAG, "nextRound: entered the winning round");
+          int theWinnerCount = maxCount;
+          Log.d(TAG, "nextRound: winner id count is: " + theWinnerCount);
+          roundNumTextView.setText("Champion");
+
+          if (theWinnerCount == currentPlayerCount - 1) {
+              matchList = findViewById(R.id.matchList);
+              myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+              myAdapter.add(players.get(theWinnerCount));
+              matchList.setAdapter(myAdapter);
+          }
+          else {
+              matchList = findViewById(R.id.matchList);
+              myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+              matchList.setAdapter(myAdapter);
+          }
       }
-      if (maxCount % 2 != 0) {
-          maxCount--;
-          Log.d(TAG, "nextRound: maxcount was odd. It is now - " + maxCount);
-          extraOdd = true;
+      else {
+          //after a next round we will always be on atleast round two, so the previous button should be enabled
+          lastRoundBtn.setEnabled(true);
+          Log.d(TAG, "nextRound: current round being viewed - " + round);
+          minCount = maxCount;
+          maxCount = minCount + (roundSize / 2);
+          Log.d(TAG, "nextRound: maxcount - " + maxCount);
+          Log.d(TAG, "nextRound: new minimum counter: " + minCount);
+          Log.d(TAG, "nextRound: new maximum counter " + maxCount);
+          if (extraOdd) {
+              maxCount++;
+              Log.d(TAG, "nextRound: there was a odd to be added. maxcount is now - " + maxCount);
+              extraOdd = false;
+          }
+          if (maxCount >= currentPlayerCount) {
+              maxCount = currentPlayerCount;
+              Log.d(TAG, "nextRound: max count was too big. It is now - " + maxCount);
+          }
+          if (maxCount % 2 != 0) {
+              maxCount--;
+              Log.d(TAG, "nextRound: maxcount was odd. It is now - " + maxCount);
+              extraOdd = true;
+          }
+          roundSize = maxCount - minCount;
+          setMatchList();
       }
-      roundSize = maxCount - minCount;
-      setMatchList();
   }
 
   public void previousRound(View view) {
-      /*round--;
-      if (round <= 1) {
-          //if we are on the first round, we cant go back any further
-          lastRoundBtn.setEnabled(false);
-      }*/
       //for now the back button just puts us back to the first round
       round = 1;
       Log.d(TAG, "nextRound: current round being viewed - " + round);
