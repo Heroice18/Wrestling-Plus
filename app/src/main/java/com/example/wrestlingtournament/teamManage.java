@@ -298,43 +298,53 @@ public class teamManage extends AppCompatActivity implements AdapterView.OnItemS
             public void onClick(DialogInterface dialog, int which) {
                 dialogSpinnerText = dialog_spinner.getSelectedItem().toString();
                 final List<String> divisionsAvailable = new ArrayList<>();
+                Log.d(TAG, "onClick: adding team to tournament");
+                db.collection("tournaments").document(dialogSpinnerText).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        final String tName = task.getResult().getString("name");
+                        Log.d(TAG, "onComplete: the name of the tournament adding is : " + tName);
 
-                db.collection("tournaments").document(dialogSpinnerText)
-                        .collection("divisions").get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() & task.getResult() != null) {
-                                    for (final QueryDocumentSnapshot document : task.getResult()) {
-                                        divisionsAvailable.add(document.getId().toLowerCase());
-                                    }
+                        db.collection("tournaments").document(dialogSpinnerText)
+                                .collection("divisions").get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful() & task.getResult() != null) {
+                                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                                divisionsAvailable.add(document.getId().toLowerCase());
+                                            }
 
-                                    if(divisionsAvailable.contains(teamLoad.getSelectedItem().toString().toLowerCase())) {
-                                        Map<String, Object> tournamentName = new HashMap<>();
-                                        tournamentName.put("code", dialogSpinnerText);
-                                        //tournamentName.put("name", db.collection("user"));
+                                            if(divisionsAvailable.contains(teamLoad.getSelectedItem().toString().toLowerCase())) {
+                                                Map<String, Object> tournamentName = new HashMap<>();
+                                                tournamentName.put("code", dialogSpinnerText);
+                                                tournamentName.put("name", tName);
+                                                //tournamentName.put("name", db.collection("user"));
 
-                                        for(Map.Entry<String,Object> entry : teamMap.entrySet()){
-                                            Map<String, Object> playerName = new HashMap<>();
-                                            playerName.put("name", entry.getValue().toString());
-                                            playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
+                                                for(Map.Entry<String,Object> entry : teamMap.entrySet()){
+                                                    Map<String, Object> playerName = new HashMap<>();
+                                                    playerName.put("name", entry.getValue().toString());
+                                                    playerName.put("division", teamLoad.getSelectedItem().toString().toLowerCase());
 
-                                            db.collection("tournaments").document(dialogSpinnerText)
-                                                    .collection("addedPlayers").document(entry.getKey())
-                                                    .set(playerName, SetOptions.merge());
-                                            db.collection("user").document(entry.getKey())
-                                                    .collection("tournaments").document(dialogSpinnerText)
-                                                    .set(tournamentName);
-                                            Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
-                                                    + " was added to the " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
+                                                    db.collection("tournaments").document(dialogSpinnerText)
+                                                            .collection("addedPlayers").document(entry.getKey())
+                                                            .set(playerName, SetOptions.merge());
+                                                    db.collection("user").document(entry.getKey())
+                                                            .collection("tournaments").document(dialogSpinnerText)
+                                                            .set(tournamentName);
+                                                    Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
+                                                            + " was added to the " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
+                                                        + " cannot participate in " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), teamLoad.getSelectedItem().toString()
-                                                + " cannot participate in " + dialogSpinnerText + " tournament", Toast.LENGTH_LONG).show();
                                     }
-                                }
-                            }
-                        });
+                                });
+                    }
+                });
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

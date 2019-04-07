@@ -23,7 +23,7 @@
     <color name="White">#FFFFFF</color>
 
     <string-array name="weightClass">
-        <item>&lt; 106</item>
+        <item>&lt;106</item>
         <item>107-113</item>
         <item>114-120</item>
         <item>121-126</item>

@@ -133,6 +133,7 @@ public class MatchActivity extends AppCompatActivity {
                           Map<String, Object> winner = new HashMap<>();
                           winner.put("name", player1name);
                           winner.put("email", player1email);
+                          winner.put("id", newCount);
                           db.document(tournamentRef).collection("wrestlers").document(String.valueOf(newCount)).set(winner);
                           db.document(tournamentRef).update("currentWrestlerCount", newCount);
                           Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();
@@ -170,6 +171,7 @@ public class MatchActivity extends AppCompatActivity {
                           Map<String, Object> winner = new HashMap<>();
                           winner.put("name", player2name);
                           winner.put("email", player2email);
+                          winner.put("id", newCount);
                           db.document(tournamentRef).collection("wrestlers").document(String.valueOf(newCount)).set(winner);
                           db.document(tournamentRef).update("currentWrestlerCount", newCount);
                           Toast.makeText(MatchActivity.this, "Congratulations! " + player1name + " is the winner!", Toast.LENGTH_LONG).show();

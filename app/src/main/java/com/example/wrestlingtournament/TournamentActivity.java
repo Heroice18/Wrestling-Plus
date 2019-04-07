@@ -54,12 +54,19 @@ public class TournamentActivity extends AppCompatActivity {
   String tournamentName;
   String tournamentCode;
   String tournamentRef;
+  //players submited to tournament
   int initialPlayerCount;
+  //players are copied to end of list when they win. This is how many are now in the list
   int currentPlayerCount;
+  //how many players are in the first round. It is equal to inital player count, unless
+    // its odd, then ine initial player count - 1
+  int firstRoundCount;
   //these counters tell us which players we need to loop through in each round
   int minCount;
   int maxCount;
   int roundSize;
+  //handles the next round if a person is passed on to the next round because of odd numbers
+  boolean extraOdd;
 
   Spinner divisionSpinner;
   Spinner weighClassSpinner;
@@ -73,12 +80,12 @@ public class TournamentActivity extends AppCompatActivity {
   public Map<String, String> playerMap = new HashMap<>();
   ImageButton nextRoundBtn;
   ImageButton lastRoundBtn;
+  TextView roundNumTextView;
 
   //these are so we don't call spinner listeners when we first create the page
   boolean isDivisionCreated = false;
   boolean isWeightClassCreated = false;
   Vector<String> players;
-
 
     @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +95,9 @@ public class TournamentActivity extends AppCompatActivity {
     mAuth = FirebaseAuth.getInstance();
     user = mAuth.getCurrentUser();
     tournamentCode = getIntent().getStringExtra("tournamentCode");
-
+    round = 1;
+    extraOdd = false;
+    roundNumTextView = findViewById(R.id.roundNumView);
     //setLevels();
 
     players = new Vector<>();
@@ -143,15 +152,31 @@ public class TournamentActivity extends AppCompatActivity {
     lastRoundBtn = (ImageButton) findViewById(R.id.lastRoundButton);
     lastRoundBtn.setEnabled(false);
 
-    initializeMatch();
-    //setMatchList();
-
-
-
       notificationManager = NotificationManagerCompat.from(this);
 
 
   }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initializeMatch();
+
+
+
+        Log.i(TAG, "On Start .....");
+        if (initialPlayerCount % 2 == 0){
+            extraOdd = false;
+            maxCount = initialPlayerCount;
+        }
+        else {
+            extraOdd = true;
+            maxCount = initialPlayerCount - 1;
+        }
+        roundSize = maxCount - minCount;
+        lastRoundBtn.setEnabled(false);
+    }
+
     public void sendOnChannel1(View v) {
 
 
@@ -172,11 +197,18 @@ public class TournamentActivity extends AppCompatActivity {
     }
 
   private void initializeMatch() {
+        round = 1;
         db.document(tournamentRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.getResult().exists()) {
                     initialPlayerCount = task.getResult().getLong("initialWrestlerCount").intValue();
+                    if (initialPlayerCount % 2 == 0) {
+                        firstRoundCount = initialPlayerCount;
+                    } else {
+                        firstRoundCount = initialPlayerCount - 1;
+                        extraOdd = true;
+                    }
                     Log.d(TAG, "onComplete: initialplayercount for bracket - " + initialPlayerCount);
                     currentPlayerCount = task.getResult().getLong("currentWrestlerCount").intValue();
                     Log.d(TAG, "onComplete: current player count for this bracket - " + currentPlayerCount);
@@ -188,12 +220,13 @@ public class TournamentActivity extends AppCompatActivity {
                     else {
                         maxCount = initialPlayerCount - 1;
                     }
+                    roundSize = maxCount - minCount;
 
-                    db.document(tournamentRef).collection("wrestlers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    db.document(tournamentRef).collection("wrestlers").orderBy("id").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, "adding player to player vector: " + document.getData().get("name").toString());
                                 players.add(document.getData().get("name").toString());
                                 playerMap.put(document.getData().get("email").toString(), document.getData().get("name").toString());
                             }
@@ -214,7 +247,9 @@ public class TournamentActivity extends AppCompatActivity {
   }
 
   private void setMatchList() {
-
+        String currentRound = "Round: " + round;
+      Log.d(TAG, "setMatchList: current round string = " + currentRound );
+        roundNumTextView.setText(currentRound);
       matchList = findViewById(R.id.matchList);
       //final String[] players;
       myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
@@ -280,19 +315,50 @@ public class TournamentActivity extends AppCompatActivity {
       lastRoundBtn.setEnabled(true);
       Log.d(TAG, "nextRound: current round being viewed - " + round);
       minCount = maxCount;
-      maxCount = minCount + (maxCount / 2);
+      maxCount = minCount + (roundSize / 2);
+      Log.d(TAG, "nextRound: maxcount - " + maxCount);
       Log.d(TAG, "nextRound: new minimum counter: " + minCount);
       Log.d(TAG, "nextRound: new maximum counter " + maxCount);
+      if (extraOdd) {
+          maxCount++;
+          Log.d(TAG, "nextRound: there was a odd to be added. maxcount is now - " + maxCount);
+          extraOdd = false;
+      }
+      if (maxCount >= currentPlayerCount) {
+          maxCount = currentPlayerCount;
+          Log.d(TAG, "nextRound: max count was too big. It is now - " + maxCount);
+          nextRoundBtn.setEnabled(false);
+      }
+      if (maxCount % 2 != 0) {
+          maxCount--;
+          Log.d(TAG, "nextRound: maxcount was odd. It is now - " + maxCount);
+          extraOdd = true;
+      }
+      roundSize = maxCount - minCount;
       setMatchList();
   }
 
   public void previousRound(View view) {
-      round--;
+      /*round--;
       if (round <= 1) {
           //if we are on the first round, we cant go back any further
           lastRoundBtn.setEnabled(false);
-      }
+      }*/
+      //for now the back button just puts us back to the first round
+      round = 1;
       Log.d(TAG, "nextRound: current round being viewed - " + round);
+      minCount = 0;
+      if (initialPlayerCount % 2 == 0){
+          extraOdd = false;
+          maxCount = initialPlayerCount;
+      }
+      else {
+          extraOdd = true;
+          maxCount = initialPlayerCount - 1;
+      }
+      roundSize = maxCount - minCount;
+      lastRoundBtn.setEnabled(false);
+      nextRoundBtn.setEnabled(true);
       setMatchList();
   }
 }
