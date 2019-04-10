@@ -24,10 +24,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Create Tournament activity handles admins creating new tournaments
+ * This class handles when Admins create new tournaments.
  */
 public class CreateTournamentActivity extends AppCompatActivity {
-
+    
+    /**
+     * Holds the name of the current activity to be used for log messages.
+     */
     public static final String TAG = "CreateTournament";
     EditText tournamentNameText, tournamentCodeText, tournamentDateText;
     CheckBox freshmanCheck, jvCheck, varsityCheck;
@@ -55,6 +58,7 @@ public class CreateTournamentActivity extends AppCompatActivity {
      * Add a tounrmanet to firestore. The tournament code becomes the
      * name of the document, and adds the admin's email, tournament name,
      * and tournament date as fields in the document.
+     *
      * @param view
      */
     public void createTournament(View view) {

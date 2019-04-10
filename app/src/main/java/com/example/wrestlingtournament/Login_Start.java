@@ -38,8 +38,11 @@ import static android.view.View.VISIBLE;
  */
 
 public class Login_Start extends AppCompatActivity{
-
+    
     public static final String location = "com.example.wrestlingtournament.USER";
+    /**
+     * This is used for debugging purposes.
+     */
     public static final String TAG = "Login_Start";
     EditText first, last, emailEditText, passwordEditText;
     RadioButton adminButton, coachButton, playerButton;
@@ -83,6 +86,9 @@ public class Login_Start extends AppCompatActivity{
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
+//        Button create = findViewById(R.id.login);
+//        create.setBackgroundColor(Color.BLUE);
+        //emailEditText.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -96,9 +102,20 @@ public class Login_Start extends AppCompatActivity{
         fbUser = mAuth.getCurrentUser();
         updateActivity();
     }
+    //String check;
+    //Intent send = new Intent(this, MainActivity.class);
 
     //Creates a new account using email and password to firebase
     //Also submits the firstname, lastname, email, and usertype to create a user document in firestore
+    
+    /**
+     * Creates a new User account.
+     *
+     * Creates a new user account to Firebase using their email and password.
+     * It also submits the firstname, lastname, email, and usertype to create a user document in Firestore.
+     *
+     * @param view
+     */
     public void signUpUser(final View view) {
         Log.d(TAG, "signUpUser: creating new user");
         final String firstName = first.getText().toString();
@@ -170,7 +187,15 @@ public class Login_Start extends AppCompatActivity{
             }
         });
     }
-
+    
+    /**
+     * Handles the logging into the app.
+     *
+     * The function will check the fields to ensure they are all filled out before
+     * connecting to Firebase to authenticate the user.
+     *
+     * @param b
+     */
     public void logInUser(View b)
     {
         Toast.makeText(getApplicationContext(), "Please wait logging you in now", Toast.LENGTH_LONG).show();
@@ -211,7 +236,10 @@ public class Login_Start extends AppCompatActivity{
             }
         });
     }
-
+    
+    /**
+     * This function updates the Login Activity to send an intent to the Main Activity.
+     */
     public void updateActivity() {
         Log.d(TAG, "updateActivity: updating activity, seeing if user is already logged in");
        if (fbUser != null) {
@@ -271,6 +299,13 @@ public class Login_Start extends AppCompatActivity{
         startActivity(send);
     }
     UserObject test = new UserObject();
+    
+    /**
+     * This function updates the UI of the Login Activity.
+     *
+     * This function allows a user to see the new account creation information by updating the visibility of items on the UI.
+     * @param c
+     */
     public void Create (View c)  {
         EditText first = findViewById(R.id.fName);
         first.setVisibility(VISIBLE);
@@ -286,14 +321,27 @@ public class Login_Start extends AppCompatActivity{
         coachButton.setVisibility(VISIBLE);
         RadioButton playerButton = findViewById(R.id.wrestler);
         playerButton.setVisibility(VISIBLE);
+//        Button log = (Button) findViewById(R.id.login);
+//        log.setVisibility(GONE);
+//        Button in = (Button) findViewById(R.id.login);
+//        in.setVisibility(GONE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(GONE);
         Button login = (Button) findViewById(R.id.logButton);
         login.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(VISIBLE);
-    }
 
+
+
+    }
+    
+    /**
+     * This function update the UI of the Login Activity.
+     *
+     * After a user has created a new account, this function updates the UI back to the normal login screen.
+     * @param B
+     */
     public void returnBack(View B)
     {
         EditText first = findViewById(R.id.fName);
@@ -310,9 +358,16 @@ public class Login_Start extends AppCompatActivity{
         playerButton.setVisibility(GONE);
         Button back = (Button) findViewById(R.id.goBack);
         back.setVisibility(GONE);
+
+//        Button log = (Button) findViewById(R.id.login);
+//        log.setVisibility(VISIBLE);
+//        Button in = (Button) findViewById(R.id.login);
+//        in.setVisibility(VISIBLE);
         Button ate = (Button) findViewById(R.id.Create);
         ate.setVisibility(VISIBLE);
         Button login = (Button) findViewById(R.id.logButton);
         login.setVisibility(VISIBLE);
+        //Button back = (Button) findViewById(R.id.goBack);
+
     }
 }

@@ -2,13 +2,18 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * Tihs class holds all of the data for the tournament brackets.
+ *
+ * @author Team 02-01
+ */
 public class BracketObject {
-
+    
     private List<WrestlerObject> _wrestlerList;
     private List<MatchObject> _matchList;
     private DivisionNames _division;
     private int _weightClass;
-
+    
     BracketObject(List<WrestlerObject> wrestlerList, DivisionNames division, int weightClass) {
         this._wrestlerList = wrestlerList;
         this._division = division;

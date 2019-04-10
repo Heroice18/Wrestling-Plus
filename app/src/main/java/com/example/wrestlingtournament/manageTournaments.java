@@ -35,6 +35,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class contains everything needed for an Admin to manage a tournament
+ * that they own.
+ *
+ * @author Team 02-01
+ */
 public class manageTournaments extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     ArrayList<String> newTeam = new ArrayList<String>();
@@ -108,7 +114,11 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
             }
         });
     }
-
+    
+    /**
+     * This function grabs the player information from FireBase and
+     * displays it to the user.
+     */
     public void grabPlayers(){
         playerType = findViewById(R.id.radioGroup);
         if (playerType.getCheckedRadioButtonId() != -1) {
@@ -235,6 +245,13 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
 
     //This updates the listview as the players are added or subtracted
     //Also this is where I have the team select for now
+    
+    /**
+     * This function updates the ListView on click.
+     *
+     * Whenever a player is added or subtracted, this function updates
+     * the ListView. This is also where the team select it kept.
+     */
     public void updateonClick(){
 
         final ListView list = (ListView) findViewById(R.id.PlayerList);
@@ -489,8 +506,15 @@ public class manageTournaments extends AppCompatActivity implements AdapterView.
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
+    
+    /**
+     * This function finalizes the selected tournament.
+     *
+     * This function will push all of the information and player weights
+     * to FireBase to finish setting up the tournament.
+     *
+     * @param f
+     */
     public void finalizeTournament(View f){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogBox);

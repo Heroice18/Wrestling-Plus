@@ -2,6 +2,11 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * This class contains all of the data regarding each division in any given tournament.
+ *
+ * @author Team 02-01
+ */
 public class DivisionObject {
     private DivisionNames _division;
     private List<WrestlerObject> _addedPlayers;

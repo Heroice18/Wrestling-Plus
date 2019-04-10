@@ -38,6 +38,8 @@ import static com.example.wrestlingtournament.App.CHANNEL_1_ID;
  *
  * Admins, coaches, and wrestlers will see the name of the tournament, the list of matches for
  * each round of the tournament, and pick which level and weight class brackets they want to view.
+ *
+ * @author Team 02-01
  */
 public class TournamentActivity extends AppCompatActivity {
   FirebaseFirestore db;
@@ -318,8 +320,12 @@ public class TournamentActivity extends AppCompatActivity {
     final TextView tournamentNameView = findViewById(R.id.tournamentName);
     tournamentNameView.setText(tournamentName);
   }
-
-
+  
+  /**
+   * This function updates the UI for each consecutive round going forward.
+   *
+   * @param view
+   */
   public void nextRound(View view) {
       round++;
       //check to see if we are displaying the champion, aka the last possible list view
@@ -371,7 +377,12 @@ public class TournamentActivity extends AppCompatActivity {
           setMatchList();
       }
   }
-
+  
+  /**
+   * This function updates the UI for each consecutive round going backwards.
+   *
+   * @param view
+   */
   public void previousRound(View view) {
       //for now the back button just puts us back to the first round
       round = 1;

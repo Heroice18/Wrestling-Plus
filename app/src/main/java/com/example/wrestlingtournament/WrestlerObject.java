@@ -2,6 +2,11 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * This class contains all of the information for a Wrestler.
+ *
+ * @author Team 02-01
+ */
 public class WrestlerObject extends UserObject {
     private List<Float> _weight;
     private String _schoolName;

@@ -2,6 +2,11 @@ package com.example.wrestlingtournament;
 
 import java.util.List;
 
+/**
+ * This contains all of the information for a Coach's team.
+ *
+ * @author Team 02-01
+ */
 public class TeamObject {
 
     private List<WrestlerObject> _roster;

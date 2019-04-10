@@ -38,7 +38,12 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.example.wrestlingtournament.App.CHANNEL_3_ID;
 
-
+/**
+ * This class contains all of the information that will be shown to users and controls
+ * what is show to each type of user.
+ *
+ * @author Team 02-01
+ */
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
@@ -198,7 +203,13 @@ public class MainActivity extends AppCompatActivity {
     
         tournamentList.setOnItemClickListener(listClick);
     }
-
+    
+    /**
+     * This function sets up the UI.
+     *
+     * The function checks to see what type of user is logged in and determines
+     * what it needs to show in the UI from there.
+     */
     public void setUp() {
         Bundle box = getIntent().getExtras();
 
